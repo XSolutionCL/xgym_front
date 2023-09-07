@@ -16,7 +16,7 @@ export const useLoginMutate = () => {
       queryClient.setQueryData([key], response);
       const { token, ...userInfo } = response;
       setProfile(userInfo)
-      setToken(response.token);
+      setToken(token);
       toast.success(`Bienvenido ${response.user_info.desc_usuario || ''}`);
       navigate('/home');
     },

@@ -19,7 +19,7 @@ function App() {
                 <Route path={route.path} element={<Layer>{<route.component/>}</Layer>} key={index} exact/>
               ))
             }
-        </Route>
+        </Route>  
         <Route path="*" element={<NotFound />} />
     </Routes>
   )
