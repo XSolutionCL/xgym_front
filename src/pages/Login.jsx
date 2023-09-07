@@ -7,8 +7,9 @@ import {
     Input,
     Typography
 } from 'antd';
-
 const { Text } = Typography;
+import { toast } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
@@ -19,9 +20,17 @@ const Login = () => {
 
     /* Si coinciden las credenciales notificacion de success con bienvenida 
     y redirigir al home, sino notificacion de error de credenciales. */
-
+    const navigate = useNavigate();
+    
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        const {username, password} = values;
+        
+        if (username === CREDENCIALES.usuario && password === CREDENCIALES.contrasena) {
+            toast.success(`Bienvenido ${username}`);
+            navigate("/home");            
+        } else {
+            toast.error('Credenciales no válidas');
+        }
     };
     
     return (
