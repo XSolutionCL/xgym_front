@@ -7,31 +7,12 @@ import {
     Typography
 } from 'antd';
 const { Text } = Typography;
-import { toast } from 'react-hot-toast';
-import { useNavigate } from "react-router-dom";
+import { useLoginMutate } from '../hooks/auth';
 
 const Login = () => {
 
-    const CREDENCIALES = {
-        usuario: "yoel",
-        contrasena: "cuba"
-    }
+    const { mutate: login, isLoading, isError } = useLoginMutate();
 
-    /* Si coinciden las credenciales notificacion de success con bienvenida 
-    y redirigir al home, sino notificacion de error de credenciales. */
-    const navigate = useNavigate();
-    
-    const onFinish = (values) => {
-        const {username, password} = values;
-        
-        if (username === CREDENCIALES.usuario && password === CREDENCIALES.contrasena) {
-            toast.success(`Bienvenido ${username}`);
-            navigate("/home");            
-        } else {
-            toast.error('Credenciales no válidas');
-        }
-    };
-    
     return (
         <div className="flex flex-col justify-center items-center h-screen w-screen">
             <Card bordered className='bg-slate-200'
@@ -45,37 +26,35 @@ const Login = () => {
                     initialValues={
                         {remember: true}
                     }
-                    onFinish={onFinish}>
-                    <Form.Item name="username"
+                    onFinish={login}>
+                    <Form.Item name="login_usuario"
                         rules={
                             [{
                                     required: true,
-                                    message: 'Please input your Username!'
+                                    message: 'Introduce tu usuario!'
                                 },]
                     }>
                         <Input prefix={
-                                <UserOutlined
-                            className="site-form-item-icon"/>
+                                <UserOutlined/>
                             }
-                            placeholder="Username"/>
+                            placeholder="Usuario"/>
                     </Form.Item>
-                    <Form.Item name="password"
+                    <Form.Item name="contrasena"
                         rules={
                             [{
                                     required: true,
-                                    message: 'Please input your Password!'
+                                    message: 'Introduce tu contraseña!'
                                 },]
                     }>
                         <Input prefix={
-                                <LockOutlined
-                            className="site-form-item-icon"/>
+                                <LockOutlined />
                             }
                             type="password"
-                            placeholder="Password"/>
+                            placeholder="Contraseña"/>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="default" htmlType="submit" className="login-form-button">
-                            Log in
+                        <Button loading={isLoading && !isError} type="default" htmlType="submit" className="login-form-button">
+                            Inicia Sesión
                         </Button>
                     </Form.Item>
                 </Form>
