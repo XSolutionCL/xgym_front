@@ -111,7 +111,9 @@ const Layer = ({children}) => {
                             minHeight: 280
                         }
                     }>
-                        {children}
+                        <div className="flex flex-col w-full h-full p-2">
+                            {children}
+                        </div>
                     </Content>
                 </Layout>
             </Content>
