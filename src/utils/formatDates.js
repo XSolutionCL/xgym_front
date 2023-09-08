@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export function formatDicomDate(str) {
     // Extraemos los valores de día, mes y año del string
     const year = str.slice(0, 4);
@@ -9,3 +11,8 @@ export function formatDicomDate(str) {
   
     return formattedDate;
   }
+
+
+export const formatDateDdMmYyyy = (date) => {
+  return dayjs(date, 'YYYY-MM-DD').format('DD-MM-YYYY');
+}

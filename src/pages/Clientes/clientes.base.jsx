@@ -2,6 +2,7 @@ import { Button, Popconfirm, Tooltip } from "antd";
 import toast from "react-hot-toast";
 import { EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import dayjs from "dayjs";
+import { formatDateDdMmYyyy } from "../../utils/formatDates";
 
 
 export const makeColumns = ({form, remove, setEditingClient, setModalIsOpen}) => {
@@ -27,9 +28,12 @@ export const makeColumns = ({form, remove, setEditingClient, setModalIsOpen}) =>
             width: 30
         },
         {
-            dataIndex: "fn_cliente",
+            // dataIndex: "fn_cliente",
             title: "F. Nacimiento",
-            width: 30
+            width: 30,
+            render: record => (
+              <>{formatDateDdMmYyyy(record.fn_cliente)}</>
+            )
         },
         {
             dataIndex: "desc_sexo",

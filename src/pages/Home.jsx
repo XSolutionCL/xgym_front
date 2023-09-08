@@ -11,7 +11,7 @@ const Home = () => {
       <Row gutter={16}>
       <Col span={12}>
         <Card bordered={false}>
-          <Statistic
+          <Statistic  
             title="Clientes Totales"
             value={325}
             precision={2}
