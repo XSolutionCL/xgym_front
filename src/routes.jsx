@@ -1,4 +1,4 @@
-import Clientes from "./pages/Clientes";
+import Clientes from "./pages/Clientes/Clientes";
 import Home from "./pages/Home";
 import { UserOutlined, HomeOutlined} from '@ant-design/icons';
 

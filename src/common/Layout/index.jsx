@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import routes from "../../routes";
 import { siglas } from "../../utils/formatStrings";
+import { useQueryClient } from "react-query";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -35,6 +36,8 @@ const Layer = ({ children }) => {
 
   const location = useLocation();
 
+  const queryClient = useQueryClient(); 
+
   const logout = useAuthStore((state) => state.logout);
   const profile = useAuthStore((state) => state.profile);
 
@@ -52,8 +55,10 @@ const Layer = ({ children }) => {
           icon={<LogoutOutlined />}
           type="ghost"
           onClick={() => {
-            navigate("/");
             logout();
+            setPacienteInfo({});
+            queryClient.clear();
+            navigate('/');
           }}
         >
           Cerrar Sesión
@@ -66,9 +71,6 @@ const Layer = ({ children }) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
-//  const activeItem = 
-  console.log(location.pathname);
 
   return (
     <Layout className="w-screen h-screen overflow-hidden">
@@ -93,6 +95,7 @@ const Layer = ({ children }) => {
       </Header>
       <Content style={{ width: "100%", height: "100%" }}>
         <Layout
+          className='flex overflow-hidden'
           style={{
             width: "100%",
             height: "100%",
@@ -105,8 +108,7 @@ const Layer = ({ children }) => {
               className="bg-gray-50"
               defaultSelectedKeys={[
                 String(
-                  //routes.filter((route) => route.path === location.pathname)[0].key
-                    routes.indexOf(routes.filter((route) => route.path === location.pathname)[0])+1
+                  routes.indexOf(routes.filter((route) => route.path === location.pathname)[0])+1
                 ),
               ]}
               style={{ height: "100%" }}
@@ -114,11 +116,14 @@ const Layer = ({ children }) => {
             />
           </Sider>
           <Content
+            className="flex flex-grow overflow-hidden"
             style={{
               minHeight: 280,
             }}
           >
-            <div className="flex flex-col w-full h-full p-2">{children}</div>
+            <Layout className='flex w-full h-full overflow-y-auto bg-transparent'>
+              {children}
+            </Layout>
           </Content>
         </Layout>
       </Content>

@@ -1,4 +1,5 @@
 import './App.css'
+import "antd/dist/reset.css";
 import Login from './pages/Login'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useAuthStore } from './common/store/authStore'
@@ -9,16 +10,15 @@ import Layer from './common/Layout'
 function App() {
 
   const isAuth = useAuthStore((state) => state.isAuth);
+  const ROUTES = routes.map((route, index) => (
+    <Route path={route.path} element={<Layer><route.component/></Layer>} key={index} exact/>
+  ))
 
   return (
     <Routes>
         <Route path="/" element={<Login/>} exact/>
         <Route element={<ProtectedRoute isAllowed={isAuth} />}>
-            {
-              routes.map((route, index) => (
-                <Route path={route.path} element={<Layer>{<route.component/>}</Layer>} key={index} exact/>
-              ))
-            }
+            {ROUTES}
         </Route>  
         <Route path="*" element={<NotFound />} />
     </Routes>
