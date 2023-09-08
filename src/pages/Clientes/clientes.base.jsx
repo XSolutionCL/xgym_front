@@ -51,7 +51,7 @@ export const makeColumns = ({form, remove, setEditingClient, setModalIsOpen}) =>
                         setModalIsOpen(true);
                         form.setFieldsValue({
                         ...record,
-                        fn_cliente: dayjs(record.fn_cliente, 'DD-MM-YYYY')
+                        fn_cliente: dayjs(record.fn_cliente, 'YYYY-MM-DD')
                         });
                     }} icon={<EditOutlined />}/>
                 </Tooltip>
