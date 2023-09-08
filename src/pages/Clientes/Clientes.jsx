@@ -1,4 +1,4 @@
-import { Typography, Spin, Form } from "antd";
+import { Typography, Spin, Form, Modal } from "antd";
 import AntTable from "../../components/Tables/AntTable";
 import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
@@ -19,7 +19,8 @@ const Clientes = () => {
     return [state.tableFilters];
 });
 
-  const [form] = Form.useForm();
+  const [formP] = Form.useForm();
+  const form = Form.useFormInstance();
 
   const [editingClient, setEditingClient] = useState(null)
 
@@ -36,17 +37,22 @@ const Clientes = () => {
       fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
       ...(editingClient ? { cod_cliente: editingClient } : {}),
     };
-    save(cuerpo);
+    console.log(form.isFieldsTouched(Object.keys(cuerpo)), form.isFieldsTouched());
+    if (form.isFieldsTouched()){
+      save(cuerpo);
+    }
+    //form.isFieldsTouched() ? save(cuerpo) : null;
+    
     setModalIsOpen(false);
     setEditingClient(null);
+    //Modal.destroyAll();
+    form.resetFields();
   }
 
   const onCancel = () => {
     form.resetFields();
-    setModalIsOpen(false);
-
+    setModalIsOpen(false);    
   };
-  
 
   if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
     return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
@@ -65,7 +71,7 @@ const Clientes = () => {
           onOk={form.submit}
           component={
             <CustomForm 
-              form={form} 
+              form={formP} 
               onFinish={handleSubmit} 
               fields={makeItems({
                 sexos: data.sexos || []
