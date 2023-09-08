@@ -20,6 +20,7 @@ const BaseModal = ({ title, text, component = <></>, onOk = () => {} , onCancel 
       <Modal
         title={title}
         okText="Aceptar"
+        destroyOnClose
         okButtonProps={{
           className: 'text-black',
           type: 'default',

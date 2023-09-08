@@ -19,8 +19,7 @@ const Clientes = () => {
     return [state.tableFilters];
 });
 
-  const [formP] = Form.useForm();
-  const form = Form.useFormInstance();
+  const [form] = Form.useForm();
 
   const [editingClient, setEditingClient] = useState(null)
 
@@ -70,8 +69,8 @@ const Clientes = () => {
           onCancel={onCancel}
           onOk={form.submit}
           component={
-            <CustomForm 
-              form={formP} 
+            <CustomForm
+              form={form} 
               onFinish={handleSubmit} 
               fields={makeItems({
                 sexos: data.sexos || []
