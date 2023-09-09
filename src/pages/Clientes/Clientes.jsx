@@ -35,16 +35,12 @@ const Clientes = () => {
       ...d,
       fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
       ...(editingClient ? { cod_cliente: editingClient } : {}),
-    };
-    console.log(form.isFieldsTouched(Object.keys(cuerpo)), form.isFieldsTouched());
-    if (form.isFieldsTouched()){
-      save(cuerpo);
-    }
-    //form.isFieldsTouched() ? save(cuerpo) : null;
+    };    
+
+    form.isFieldsTouched() ? save(cuerpo) : null;
     
     setModalIsOpen(false);
     setEditingClient(null);
-    //Modal.destroyAll();
     form.resetFields();
   }
 
