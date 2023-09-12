@@ -61,12 +61,9 @@ export const makeColumns = ({
               description="Está seguro de eliminar el plan?"
               icon={<QuestionCircleOutlined style={{ color: "red" }} />}
               placement="left"
-              onConfirm={() => {
-                //TODO
-                /*remove({cod_cliente: record.cod_cliente})}*/ console.log(
-                  record
-                );
-              }}
+              onConfirm={() =>
+                remove({cod_plan: record.cod_plan})
+              }
               okButtonProps={{ type: "default", danger: true }}
               okText="Si"
               cancelText="No"
@@ -120,7 +117,7 @@ export const makeItems = () => {
       options: [
         {
           value: "S",
-          label: "SÍ",
+          label: "SI",
         },
         {
           value: "N",

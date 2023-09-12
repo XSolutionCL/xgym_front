@@ -6,6 +6,7 @@ import BaseModal from "../../components/Modals/BaseModal";
 import { useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./planes.base";
+import { useDeletePlan, usePaginatePlanes, useSavePlan } from "../../hooks/planes";
 
 
 const { Title } = Typography;
@@ -22,27 +23,25 @@ const Planes = () => {
 
   const [editingPlan, setEditingPlan] = useState(null)
 
-  //TODO
-  //const { data, isFetching, isError } = usePaginateClientes();
-  //const { mutate: save, isLoading } = useSaveCliente();
-  //const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
+  
+  const { data, isFetching, isError } = usePaginatePlanes();
+  const { mutate: save, isLoading } = useSavePlan();
+  const { mutate: remove, isLoading: isRemoving } = useDeletePlan();
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const handleSubmit = (d) => {
-    //TODO
-    // const cuerpo = {
-    //   ...d,
-    //   fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
-    //   ...(editingClient ? { cod_cliente: editingClient } : {}),
-    // };    
+     const cuerpo = {
+       ...d,
+       ...(editingPlan ? { cod_plan: editingPlan } : {}),
+     };    
 
-    // form.isFieldsTouched() ? save(cuerpo) : null;
+    form.isFieldsTouched() ? save(cuerpo) : null;
     
-    // setModalIsOpen(false);
-    // setEditingClient(null);
-    // form.resetFields();
-    console.log(d);
+    setModalIsOpen(false);
+    setEditingPlan(null);
+    form.resetFields();
+    console.log(cuerpo);
   }
 
   const onCancel = () => {
@@ -50,14 +49,14 @@ const Planes = () => {
     setModalIsOpen(false);    
   };
 
-  //TODO
-  // if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
-  //   return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
-  // }
+
+   if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
+    return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
+  }
 
   return (
     <div className="flex flex-col w-full h-full p-4">
-      <Title>Lista de Planes</Title>
+      <Title>Lista de Planes</Title> Total: {tableFilters.pagination.total}
       <div className="flex flex-row justify-start mb-2">
         <BaseModal
           title={`${editingPlan ? 'Editar' : 'Crear'} Plan`}
@@ -68,7 +67,7 @@ const Planes = () => {
           onOk={form.submit}
           component={
             <CustomForm
-              form={form} 
+              form={form}
               onFinish={handleSubmit} 
               fields={makeItems()}
             />
@@ -78,39 +77,11 @@ const Planes = () => {
       <AntTable 
         columns={makeColumns({
           form: form,
-          //TODO
-          //remove: remove,
-          remove: () => {},
+          remove: remove,
           setEditingPlan: setEditingPlan, 
           setModalIsOpen: setModalIsOpen,
         })} 
-        //data={data.list} 
-        data={[
-          {
-            cod_plan: 1,
-            desc_plan: "Plan Mensual",
-            precio_mensual: 20000,
-            cant_meses: 1,
-            precio_total: 20000,
-            cod_activo: "S"
-          },
-          {
-            cod_plan: 2,
-            desc_plan: "Plan Trimestral",
-            precio_mensual: 18000,
-            cant_meses: 3,
-            precio_total: 54000,
-            cod_activo: "N"
-          },
-          {
-            cod_plan: 3,
-            desc_plan: "Plan Semestral",
-            precio_mensual: 15000,
-            cant_meses: 6,
-            precio_total: 90000,
-            cod_activo: "S"
-          }
-        ]} 
+        data={data.list} 
       />
     </div>
   )

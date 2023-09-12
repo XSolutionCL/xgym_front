@@ -4,13 +4,13 @@ import useTableFilters from "../common/store/tableFiltersStore";
 import { axiosDelete, axiosPaginateGet, axiosPost } from "../apis/calls";
 
 
-const key = "clientes";
+const key = "planes";
 
 
-export const usePaginateClientes = () => {
+export const usePaginatePlanes = () => {
     const { tableFilters, setTableFilters } = useTableFilters();
     return useQuery(
-        [key, tableFilters], 
+        [key, tableFilters],
         () => axiosPaginateGet(`${key}/all`, tableFilters),
         {
             keepPreviousData: true,
@@ -24,7 +24,7 @@ export const usePaginateClientes = () => {
 }
 
 
-export const useSaveCliente = () => {
+export const useSavePlan = () => {
     const queryClient = useQueryClient();
     const { tableFilters } = useTableFilters();
     return useMutation({
@@ -33,7 +33,7 @@ export const useSaveCliente = () => {
             let oldData = queryClient.getQueryData([key, tableFilters]);
             let newList = [...oldData.list];
             const indexToUpdate = newList.findIndex(
-                (item) => item.cod_cliente === response.cod_cliente
+                (item) => item.cod_plan === response.cod_plan
             )
             if (indexToUpdate === -1){
                 newList.push({...response});
@@ -45,29 +45,32 @@ export const useSaveCliente = () => {
                 total: indexToUpdate === -1 ? oldData.total + 1 : oldData.total,
                 list: newList
             });
-            toast.success("Cliente guardado correctamente");
+            toast.success("Plan guardado correctamente");
         },
         onError: () => {
-            toast.error("Error al guardar cliente");
+            toast.error("Error al guardar plan");
         }
     }
     ); 
 }
 
-export const useClienteDelete = () => {
+export const useDeletePlan = () => {
     const queryClient = useQueryClient();
+    // const { tableFilters } = useTableFilters();
     return useMutation({
         mutationFn: (cuerpo) => axiosDelete(`${key}/eliminar`, cuerpo),
         onSuccess: (response) => {
-            toast.success("Cliente eliminado correctamente");
+            toast.success("Plan eliminado correctamente");
             queryClient.invalidateQueries([key]);
-            const list = queryClient.getQueryData([key]);
-            if (list) {
-            const newList = list.filter(record => record.id !== response.cod_cliente);
-            queryClient.setQueryData(key, newList);
-            }
+            /* const oldData = queryClient.getQueryData([key, tableFilters]);
+            let newList = [...oldData.list];
+            queryClient.setQueryData([key, tableFilters], {
+                ...oldData,
+                total: oldData.total - 1,
+                list: newList.filter((item) => item.cod_plan !== response.cod_plan)
+            }); */
         },
         onError: () => {
-            toast.error("Error al eliminar el cliente");
+            toast.error("Error al eliminar el plan");
         }
   })}
