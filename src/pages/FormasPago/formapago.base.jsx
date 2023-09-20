@@ -41,12 +41,7 @@ export const makeColumns = ({
               description="Está seguro de eliminar la Forma de Pago?"
               icon={<QuestionCircleOutlined style={{ color: "red" }} />}
               placement="left"
-              onConfirm={() => {
-                //TODO
-                /*remove({cod_cliente: record.cod_cliente})}*/ console.log(
-                  record
-                );
-              }}
+              onConfirm={ () => remove({cod_forma_pago: record.cod_forma_pago}) }
               okButtonProps={{ type: "default", danger: true }}
               okText="Si"
               cancelText="No"

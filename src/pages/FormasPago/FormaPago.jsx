@@ -6,6 +6,7 @@ import BaseModal from "../../components/Modals/BaseModal";
 import { useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./formapago.base";
+import { useDeleteFormasPago, usePaginateFormasPago, useSaveFormasPago } from "../../hooks/formaspago";
 
 
 const { Title } = Typography;
@@ -22,27 +23,23 @@ const FormaPago = () => {
 
   const [editingFormaPago, setEditingFormaPago] = useState(null)
 
-  //TODO
-  //const { data, isFetching, isError } = usePaginateClientes();
-  //const { mutate: save, isLoading } = useSaveCliente();
-  //const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
+  const { data, isFetching, isError } = usePaginateFormasPago();
+  const { mutate: save, isLoading } = useSaveFormasPago();
+  const { mutate: remove, isLoading: isRemoving } = useDeleteFormasPago();
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const handleSubmit = (d) => {
-    //TODO
-    // const cuerpo = {
-    //   ...d,
-    //   fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
-    //   ...(editingClient ? { cod_cliente: editingClient } : {}),
-    // };    
+    const cuerpo = {
+      ...d,      
+      ...(editingFormaPago ? { cod_forma_pago: editingFormaPago } : {}),
+    };    
 
-    // form.isFieldsTouched() ? save(cuerpo) : null;
+    form.isFieldsTouched() ? save(cuerpo) : null;
     
-    // setModalIsOpen(false);
-    // setEditingClient(null);
-    // form.resetFields();
-    console.log(d);
+    setModalIsOpen(false);
+    setEditingFormaPago(null);
+    form.resetFields();    
   }
 
   const onCancel = () => {
@@ -50,10 +47,9 @@ const FormaPago = () => {
     setModalIsOpen(false);    
   };
 
-  //TODO
-  // if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
-  //   return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
-  // }
+  if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
+    return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
+  }
 
   return (
     <div className="flex flex-col w-full h-full p-4">
@@ -77,29 +73,12 @@ const FormaPago = () => {
       </div>
       <AntTable 
         columns={makeColumns({
-          form: form,
-          //TODO
-          //remove: remove,
-          remove: () => {},
+          form: form,          
+          remove: remove,          
           setEditingFormaPago: setEditingFormaPago, 
           setModalIsOpen: setModalIsOpen,
         })} 
-        //data={data.list} 
-        data={[
-          {
-            cod_forma_pago: 1,
-            desc_forma_pago: "Forma de Pago A",           
-          },
-          {
-            cod_forma_pago: 2,
-            desc_forma_pago: "Forma de Pago B",           
-          },
-          {
-            cod_forma_pago: 3,
-            desc_forma_pago: "Forma de Pago C",           
-          },
-          
-        ]} 
+        data={data.list}
       />
     </div>
   )
