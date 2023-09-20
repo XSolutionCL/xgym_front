@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Tooltip } from "antd";
+import { Button, Form, Popconfirm, Tooltip } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -83,7 +83,7 @@ export const makeColumns = ({
   return columns;
 };
 
-export const makeItems = () => {
+export const makeItems = ({form=Form.useForm}) => {
   const fields = [
     {
       name: "desc_plan",
@@ -102,6 +102,8 @@ export const makeItems = () => {
       label: "Cantidad de Meses",
       type: "number",
       required: true,
+      onChange: () => 
+        form.setFieldValue("precio_total", Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses")))
     },
     {
       name: "precio_total",

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import useTableFilters from "../common/store/tableFiltersStore";
-import { axiosDelete, axiosPaginateGet, axiosPost } from "../apis/calls";
+import { axiosDelete, axiosGet, axiosPaginateGet, axiosPost } from "../apis/calls";
 
 
 const key = "clientes";
@@ -71,3 +71,30 @@ export const useClienteDelete = () => {
             toast.error("Error al eliminar el cliente");
         }
   })}
+
+
+  export const useGetHistoricoPlanes = (cod_cliente) => {
+    return useQuery(
+        [key + "data-asociar-plan", cod_cliente], 
+        () => axiosGet(`${key}/data-asociar-plan/?cod_cliente=${cod_cliente}`),
+        {
+            enabled: !!cod_cliente
+        }
+    ); 
+}
+
+
+export const useAscociarPlanCliente = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (cuerpo) => axiosPost(`${key}/asociar-plan`, cuerpo),
+        onSuccess: (response, vars) => {
+            queryClient.setQueryData([key + "data-asociar-plan"] , old => [...old||[], {...response}]);
+            toast.success("Plan asociado correctamente");
+        },
+        onError: () => {
+            toast.error("Error al asociar plan");
+        }
+    }
+    ); 
+}

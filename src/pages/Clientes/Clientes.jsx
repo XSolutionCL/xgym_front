@@ -7,6 +7,7 @@ import { useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import dayjs from "dayjs";
 import { makeColumns, makeItems } from "./clientes.base";
+import ClientePlanesModal from "./ClientePlanesModal";
 
 
 const { Title } = Typography;
@@ -29,6 +30,8 @@ const Clientes = () => {
   const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
+
+  const [planesIsModalOpen, setPlanesIsModalOpen] = useState(false)
 
   const handleSubmit = (d) => {
     const cuerpo = {
@@ -55,7 +58,11 @@ const Clientes = () => {
 
   return (
     <div className="flex flex-col w-full h-full p-4">
-      <Title>Lista de Clientes</Title>
+      <ClientePlanesModal isModalOpen={planesIsModalOpen} setIsModalOpen={setPlanesIsModalOpen}/>
+      <div className="flex flex-row w-full justify-between items-center">
+        <Title level={2}>Lista de Clientes</Title>
+        <Title level={4}>Total: {tableFilters.pagination.total}</Title>
+      </div>
       <div className="flex flex-row justify-start mb-2">
         <BaseModal
           title={`${editingClient ? 'Editar' : 'Crear'} Cliente`}
@@ -78,6 +85,7 @@ const Clientes = () => {
       <AntTable 
         columns={makeColumns({
           form: form,
+          setPlanesIsModalOpen: setPlanesIsModalOpen,
           remove: remove,
           setEditingClient: setEditingClient, 
           setModalIsOpen: setModalIsOpen,
