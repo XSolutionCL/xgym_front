@@ -113,9 +113,10 @@ export const makeItems = ({form=Form.useForm}) => {
     },
     {
       name: "cod_activo",
-      label: "Activo",
+      label: "Activo",      
       type: "select",
       required: true,
+      
       options: [
         {
           value: "S",

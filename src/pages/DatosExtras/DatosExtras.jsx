@@ -6,6 +6,7 @@ import BaseModal from "../../components/Modals/BaseModal";
 import { useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./datosextras.base";
+import { useDeleteDatosExtras, usePaginateDatosExtras, useSaveDatosExtras } from "../../hooks/datosextras";
 
 
 const { Title } = Typography;
@@ -22,38 +23,33 @@ const DatosExtras = () => {
 
   const [editingDatosExtra, setEditingDatosExtra] = useState(null)
 
-  //TODO
-  //const { data, isFetching, isError } = usePaginateClientes();
-  //const { mutate: save, isLoading } = useSaveCliente();
-  //const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
+  const { data, isFetching, isError } = usePaginateDatosExtras();
+  const { mutate: save, isLoading } = useSaveDatosExtras();
+  const { mutate: remove, isLoading: isRemoving } = useDeleteDatosExtras();
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const handleSubmit = (d) => {
-    //TODO
-    // const cuerpo = {
-    //   ...d,
-    //   fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
-    //   ...(editingClient ? { cod_cliente: editingClient } : {}),
-    // };    
+    const cuerpo = {
+      ...d,     
+      ...(editingDatosExtra ? { cod_datos_extra: editingDatosExtra } : {}),
+    };    
 
-    // form.isFieldsTouched() ? save(cuerpo) : null;
+    form.isFieldsTouched() ? save(cuerpo) : null;
     
-    // setModalIsOpen(false);
-    // setEditingClient(null);
-    // form.resetFields();
-    console.log(d);
+    setModalIsOpen(false);
+    setEditingDatosExtra(null);
+    form.resetFields();    
   }
 
   const onCancel = () => {
     form.resetFields();
     setModalIsOpen(false);    
   };
-
-  //TODO
-  // if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
-  //   return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
-  // }
+  
+  if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
+    return ( <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" /> );
+  }
 
   return (
     <div className="flex flex-col w-full h-full p-4">
@@ -77,29 +73,12 @@ const DatosExtras = () => {
       </div>
       <AntTable 
         columns={makeColumns({
-          form: form,
-          //TODO
-          //remove: remove,
-          remove: () => {},
+          form: form,          
+          remove: remove,          
           setEditingDatosExtra: setEditingDatosExtra, 
           setModalIsOpen: setModalIsOpen,
         })} 
-        //data={data.list} 
-        data={[
-          {
-            cod_datos_extra: 1,
-            desc_datos_extra: "Datos Extra A",           
-          },
-          {
-            cod_datos_extra: 2,
-            desc_datos_extra: "Datos Extra B",           
-          },
-          {
-            cod_datos_extra: 3,
-            desc_datos_extra: "Datos Extra C",           
-          },
-          
-        ]} 
+        data={data.list} 
       />
     </div>
   )

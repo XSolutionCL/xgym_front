@@ -23,7 +23,7 @@ const CustomForm = ({onFinish, form, fields}) => {
           showSearch
           allowClear
           style={{ width: '100%' }}
-          placeholder={field.label}
+          placeholder={'Seleccione'}
           optionFilterProp="children"
           filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
         >

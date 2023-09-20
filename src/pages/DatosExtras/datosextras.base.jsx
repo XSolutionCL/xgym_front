@@ -41,12 +41,7 @@ export const makeColumns = ({
               description="Está seguro de eliminar el Dato Extra?"
               icon={<QuestionCircleOutlined style={{ color: "red" }} />}
               placement="left"
-              onConfirm={() => {
-                //TODO
-                /*remove({cod_cliente: record.cod_cliente})}*/ console.log(
-                  record
-                );
-              }}
+              onConfirm={ () => remove({cod_datos_extra: record.cod_datos_extra}) }
               okButtonProps={{ type: "default", danger: true }}
               okText="Si"
               cancelText="No"
