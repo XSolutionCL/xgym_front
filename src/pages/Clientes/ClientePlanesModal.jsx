@@ -26,6 +26,12 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
       if(cod_plan){
         const selP = planes.filter((plan) => plan.value === cod_plan)[0]
         setSelectedPlan(selP)
+        form.setFieldsValue({
+            "desde": null,
+            "hasta": null,
+            "total_cuotas": null,
+            "monto_cuota": null
+        })
       }else{
         setSelectedPlan(null)
       }
@@ -34,6 +40,8 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
     useEffect(() => {
         if(desde && cod_plan && selectedPlan){
           form.setFieldValue("hasta", desde.add(selectedPlan.cant_meses, 'month'))
+        }else{
+            form.setFieldValue("hasta", null)
         }
       }, [desde, cod_plan])
 
@@ -59,7 +67,7 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
     
 
   return (
-    <Modal 
+    <Modal
         title={`Planes de ${isModalOpen.desc_cliente}`}
         open={isModalOpen}
         onCancel={() => {
@@ -145,7 +153,7 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
                                     },
                                 ]}
                             />
-                            <CustomForm 
+                            <CustomForm
                                 form={form}
                                 onFinish={handleSubmit}
                                 fields={makeModalFields({
