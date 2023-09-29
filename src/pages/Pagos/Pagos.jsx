@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Typography } from "antd";
+import { Form, Spin, Typography } from "antd";
 import { makeColumns, makeModalFields } from "./pagos.base";
 import { useFormCreatePagos } from "../../hooks/pagos";
 import AntTable from "../../components/Tables/AntTable";
@@ -11,30 +11,33 @@ import { useEffect } from "react";
 const { Title } = Typography;
 
 export const Pagos = () => {
-  const { data, isFetching } = useFormCreatePagos(true);
-
-  const [form] = Form.useForm();
 
   const [editingPago, setEditingPago] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  
+  const { data: dataPagos, isFetching: isDataCrearLoading } = useFormCreatePagos(modalIsOpen);
+
+  const { clientes, formas_pago } = dataPagos ? dataPagos: [];
+
+  const [form] = Form.useForm();
 
   //Poblando el campo 'Planes'
   const clienteSelected = Form.useWatch("cod_cliente", form);
   const [selectedClientePlanes, setSelectedClientePlanes] = useState([]);
 
   useEffect(() => {
-    if (data && clienteSelected) {
-      const person = data.find((item) => item.value === clienteSelected);
+    if (clientes && clienteSelected) {
+      const person = clientes.find((item) => item.value === clienteSelected);
       setSelectedClientePlanes(person.planes);
     }
-  }, [clienteSelected, data]);
+  }, [clienteSelected, clientes]);
 
   //Poblando el campo 'Cuotas a Pagar'
   const planesSelected = Form.useWatch("cod_plan", form);
   const [selectedCuotas, setselectedCuotas] = useState([]);
 
   useEffect(() => {
-    if (data && planesSelected) {
+    if (clientes && planesSelected) {
       const plan = selectedClientePlanes.find(
         (item) => item.value === planesSelected
       );
@@ -47,7 +50,7 @@ export const Pagos = () => {
 
       form.setFieldValue("monto_cuota", plan.monto_cuota);
     }
-  }, [planesSelected, data, selectedClientePlanes]);
+  }, [planesSelected, clientes, selectedClientePlanes]);
 
   const cuotaSelected = Form.useWatch("cuotas_restantes", form);
   useEffect(() => {
@@ -60,13 +63,8 @@ export const Pagos = () => {
   }, [cuotaSelected]);
 
   const handleSubmit = (d) => {
-    const cuerpo = {
-      ...d,
-    };
     console.log(d);
-
     //TODO: mutate...
-
     setModalIsOpen(false);
     form.resetFields();
   };
@@ -83,7 +81,7 @@ export const Pagos = () => {
 
   return (
     <div className="flex flex-col w-full h-full p-4">
-      <div className="flex flex-row w-full justify-between items-center">
+      <div className="flex flex-row items-center justify-between w-full">
         <Title level={2}>Lista de Pagos</Title>
         {/* //TODO */}
         {/* <Title level={4}>Total: {tableFilters.pagination.total}</Title> */}
@@ -97,14 +95,18 @@ export const Pagos = () => {
           onCancel={onCancel}
           onOk={form.submit}
           component={
+            isDataCrearLoading ? 
+            <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />
+            :
             <CustomForm
               form={form}
               onFinish={handleSubmit}
               fields={makeModalFields({
                 form: form,
-                data: data,
+                data: clientes || [],
                 selectedClientePlanes: selectedClientePlanes,
                 selectedCuotas: selectedCuotas,
+                formasPago: formas_pago
               })}
             />
           }

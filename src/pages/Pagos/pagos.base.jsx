@@ -29,7 +29,7 @@ export const makeColumns = () => {
   return columns;
 };
 
-export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas }) => {
+export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, formasPago }) => {
   
   
   const fields = [
@@ -60,13 +60,12 @@ export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas })
       required: true,
       options: selectedCuotas,     
     },
-    //TODO
     {
       name: "cod_forma_pago",
       label: "Forma Pago",
       type: "select",
       required: true,
-      options: [],     
+      options: formasPago || [],     
     },
     {
       name: "monto_total",
