@@ -21,18 +21,68 @@ export const useFormCreatePagos = (search) => {
   );
 };
 
-// export const usePaginateClientes = () => {
-//     const { tableFilters, setTableFilters } = useTableFilters();
-//     return useQuery(
-//         [key, tableFilters],
-//         () => axiosPaginateGet(`${key}/all`, tableFilters),
-//         {
-//             keepPreviousData: true,
-//             onSuccess: (response) => {
-//                 let newFilters = {...tableFilters};
-//                 newFilters.pagination.total = response.total;
-//                 setTableFilters(newFilters);
-//             },
-//         }
-//     );
-// }
+ export const usePaginatePagos = () => {
+     const { tableFilters, setTableFilters } = useTableFilters();
+     return useQuery(
+         [key, tableFilters],
+         () => axiosPaginateGet(`${key}/all`, tableFilters),
+         {
+             keepPreviousData: true,
+             onSuccess: (response) => {
+                 let newFilters = {...tableFilters};
+                 newFilters.pagination.total = response.total;
+                 setTableFilters(newFilters);
+             },
+         }
+    );
+ }
+
+
+export const useSavePago = () => {
+  const queryClient = useQueryClient();
+  const { tableFilters } = useTableFilters();
+  return useMutation({
+      mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
+      onSuccess: (response) => {
+          let oldData = queryClient.getQueryData([key, tableFilters]);
+          let newList = [...oldData.list];
+          const indexToUpdate = newList.findIndex(
+              (item) => item.cod_pago === response.cod_pago
+          )
+          if (indexToUpdate === -1){
+              newList.push({...response});
+          }else{
+              newList[indexToUpdate] = {...response};
+          }
+          queryClient.setQueryData([key, tableFilters], {
+              ...oldData,
+              total: indexToUpdate === -1 ? oldData.total + 1 : oldData.total,
+              list: newList
+          });
+          toast.success("Pago guardado correctamente");
+      },
+      onError: () => {
+          toast.error("Error al guardar pago");
+      }
+  }
+  ); 
+}
+
+
+export const usePagoDelete = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+      mutationFn: (cuerpo) => axiosDelete(`${key}/eliminar`, cuerpo),
+      onSuccess: (response) => {
+          toast.success("Pago eliminado correctamente");
+          queryClient.invalidateQueries([key]);
+          /* const list = queryClient.getQueryData([key]);
+          if (list) {
+          const newList = list.filter(record => record.id !== response.cod_cliente);
+          queryClient.setQueryData(key, newList);
+          } */
+      },
+      onError: () => {
+          toast.error("Error al eliminar pago");
+      }
+})}

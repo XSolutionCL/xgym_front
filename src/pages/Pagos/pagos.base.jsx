@@ -1,4 +1,10 @@
-export const makeColumns = () => {
+import { Button, Popconfirm, Tooltip } from "antd";
+import { formatDateDdMmYyyy } from "../../utils/formatDates";
+import { formatCLP, formatterNumber, parserNumber } from "../../utils/formatMoney";
+import { EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import dayjs from "dayjs";
+
+export const makeColumns = ({ form, remove, setEditingPago, setModalIsOpen }) => {
   const columns = [
     {
       dataIndex: "desc_cliente",
@@ -11,9 +17,33 @@ export const makeColumns = () => {
       width: 50,
     },
     {
+      dataIndex: "fecha_pago",
+      title: "Fecha",
+      width: 30,
+      render: (fecha_pago) => (
+        <>{formatDateDdMmYyyy(fecha_pago)}</>
+      )
+    },
+    {
+      dataIndex: "cant_cuotas_pagadas",
+      title: "Cuotas Pagadas",
+      width: 45
+    },
+    {
+      dataIndex: "monto_cuota",
+      title: "Monto Cuota",
+      width: 40,
+      render: (monto_cuota) => (
+        <>{formatCLP(monto_cuota)}</>
+      )
+    },
+    {
       dataIndex: "monto_pago",
       title: "Monto",
-      width: 50,
+      width: 40,
+      render: (monto_pago) => (
+        <>{formatCLP(monto_pago)}</>
+      )
     },
     {
       dataIndex: "desc_forma_pago",
@@ -21,10 +51,42 @@ export const makeColumns = () => {
       width: 30,
     },
     {
-      dataIndex: "fecha_pago",
-      title: "Fecha",
-      width: 30,
-    },
+      key: "acciones",
+      title: "Acciones",
+      render: record => (
+        <div className="flex flex-row justify-center gap-2 text-center">
+          <Tooltip title="Editar pago">
+              <Button type="link" onClick={() => {
+                  setEditingPago(record.cod_pago);
+                  setModalIsOpen(true);
+                  form.setFieldsValue({
+                  ...record,
+                  fecha_pago: dayjs(record.fecha_pago, 'YYYY-MM-DD')
+                  });
+              }} icon={<EditOutlined />}/>
+          </Tooltip>
+          <Tooltip placement="topLeft" title="Eiminar pago">
+              <Popconfirm
+                  title="Cuidado!!!"
+                  description="Está seguro de eliminar el pago?"
+                  icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                  placement="left"
+                  onConfirm={() => remove({cod_pago: record.cod_pago})}
+                  okButtonProps={{ type: 'default', danger: true }}
+                  okText="Si"
+                  cancelText="No"
+              >
+                  <Button
+                      danger
+                      type="link" 
+                      icon={<DeleteOutlined size="1.5em" />} 
+                  />
+              </Popconfirm>
+          </Tooltip>
+        </div>
+      ),
+      width: 20
+    }    
   ];
   return columns;
 };
@@ -41,10 +103,16 @@ export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, f
       required: true,
     },
     {
-      name: "cod_plan",
+      name: "cod_historial_cliente_planes",
       label: "Planes",
       type: "select",
       options: selectedClientePlanes, 
+      required: true,
+    },
+    {
+      name: "fecha_pago",
+      label: "Fecha Pago",
+      type: "date",
       required: true,
     },
     {
@@ -52,9 +120,12 @@ export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, f
       label: "Monto Cuota",
       disabled: true,
       type: "number",
+      prefix: "CLP",
+      formatter: (value) => formatterNumber(value),
+      parser: (value) => parserNumber(value)
     },
     {
-      name: "cuotas_restantes",
+      name: "cant_cuotas_pagadas",
       label: "Cuotas Pagar",
       type: "select",
       required: true,
@@ -68,10 +139,13 @@ export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, f
       options: formasPago || [],     
     },
     {
-      name: "monto_total",
+      name: "monto_pago",
       label: "Monto Total",
       disabled: true,
-      type: "number",      
+      type: "number",
+      prefix: "CLP",
+      formatter: (value) => formatterNumber(value),
+      parser: (value) => parserNumber(value)      
     },
   ];
   return fields;

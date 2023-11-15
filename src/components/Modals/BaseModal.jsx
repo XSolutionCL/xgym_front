@@ -1,7 +1,16 @@
 import React, { useEffect } from 'react';
 import { Button, Modal } from 'antd';
 
-const BaseModal = ({ title, text, component = <></>, onOk = () => {} , onCancel = () => {}, isModalOpen, setIsModalOpen}) => {
+const BaseModal = ({ 
+  title, 
+  text, 
+  component = <></>,
+  onOk = () => {} , 
+  onCancel = () => {}, 
+  isModalOpen, 
+  setIsModalOpen, 
+  ...props
+}) => {
 
   useEffect(() => {
     
@@ -18,6 +27,7 @@ const BaseModal = ({ title, text, component = <></>, onOk = () => {} , onCancel 
         {text}
       </Button>
       <Modal
+        {...props}
         title={title}
         okText="Aceptar"
         destroyOnClose

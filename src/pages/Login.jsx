@@ -1,6 +1,5 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, Typography } from "antd";
-const { Text } = Typography;
+import { Button, Card, Form, Input } from "antd";
 import { useLoginMutate } from "../hooks/auth";
 import { useEffect } from "react";
 import { useAuthStore } from "../common/store/authStore";
@@ -17,20 +16,22 @@ const Login = () => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen w-screen">
+    <div className="flex flex-col items-center justify-center w-screen h-screen">
       <Card
         bordered
-        className="bg-slate-200"
+        className="w-1/4 shadow-sm h-1/2 bg-slate-50 shadow-amber-200"
         title={
-          <div className="flex flex-row w-full justify-center items-center gap-2 mt-2">
-            <img className="w-10 h-10" src="./logo.jpg" alt="Logo" />
-            <Text className="text-xl">XGYM</Text>
+          <div className="flex flex-row items-center justify-center w-full gap-2 mt-2">
+            <img className="w-32 h-32" src="/logo.png" alt="Logo" />
+            {/* <Text className="text-xl">XGYM</Text> */}
           </div>
         }
+        
       >
         <Form
-          name="normal_login"
-          className="flex flex-col justify-center items-center"
+          name="login_form"
+          layout="vertical"
+          className="flex flex-col items-center justify-center"
           initialValues={{ remember: true }}
           onFinish={login}
         >
@@ -43,7 +44,7 @@ const Login = () => {
               },
             ]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Usuario" />
+            <Input autoFocus prefix={<UserOutlined />} placeholder="Usuario" />
           </Form.Item>
           <Form.Item
             name="contrasena"
@@ -65,7 +66,7 @@ const Login = () => {
               loading={isLoading && !isError}
               type="default"
               htmlType="submit"
-              className="login-form-button"
+              className="w-full login-form-button"
             >
               Inicia Sesión
             </Button>

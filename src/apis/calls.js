@@ -1,17 +1,22 @@
-import { useAuthStore } from '../common/store/authStore';
-import axios from './axiosConfig';
-
+import { useAuthStore } from "../common/store/authStore";
+import axios from "./axiosConfig";
 
 export const axiosPaginateGet = async (ruta, params) => {
   const token = useAuthStore.getState().token;
-  const {sorter, filters} = params;
+  const { sorter, filters } = params;
   const { current, pageSize } = params.pagination ? params.pagination : {};
+  const searchParams = filters.search
+    ? `&search=${filters.search}`
+    : "";
   const { data } = await axios.get(
-    `${ruta}/?current=${current}&pageSize=${pageSize}${sorter.field && sorter.order ? 
-    '&field=' + sorter.field : ''}${sorter.order && sorter.order !== 'ascend' ? '&order=desc' : '&order=asc'}`,
+    `${ruta}/?current=${current}&pageSize=${pageSize}${
+      sorter.field && sorter.order ? "&field=" + sorter.field : ""
+    }${
+      sorter.order && sorter.order !== "ascend" ? "&order=desc" : "&order=asc"
+    }${searchParams}`,
     {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     }
@@ -23,7 +28,7 @@ export const axiosGet = async (ruta) => {
   const token = useAuthStore.getState().token;
   const { data } = await axios.get(`${ruta}`, {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -34,7 +39,7 @@ export const axiosPost = async (ruta, cuerpo) => {
   const token = useAuthStore.getState().token;
   const { data } = await axios.post(`${ruta}`, cuerpo, {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -44,11 +49,11 @@ export const axiosPost = async (ruta, cuerpo) => {
 export const axiosPostFile = async (ruta, cuerpo) => {
   const token = useAuthStore.getState().token;
   const { data } = await axios({
-    method: 'post',
+    method: "post",
     url: `${ruta}`,
     data: cuerpo,
     headers: {
-      'Content-Type': `multipart/form-data`,
+      "Content-Type": `multipart/form-data`,
       Authorization: `Bearer ${token}`,
     },
   });
@@ -59,7 +64,7 @@ export const axiosPut = async (ruta, cuerpo) => {
   const token = useAuthStore.getState().token;
   const { data } = await axios.put(`${ruta}`, cuerpo, {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -69,9 +74,9 @@ export const axiosPut = async (ruta, cuerpo) => {
 export const axiosDelete = async (ruta, cuerpo) => {
   const token = useAuthStore.getState().token;
   const { data } = await axios.delete(`${ruta}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     data: JSON.stringify(cuerpo),
@@ -82,11 +87,11 @@ export const axiosDelete = async (ruta, cuerpo) => {
 export const baseFilePost = async (ruta, file) => {
   const token = useAuthStore.getState().token;
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
   try {
     const res = await fetch(`${ruta}`, {
-      method: 'POST',
-      headers: token ? { authorization: 'Bearer ' + token } : {},
+      method: "POST",
+      headers: token ? { authorization: "Bearer " + token } : {},
       body: formData,
     });
 
@@ -96,7 +101,7 @@ export const baseFilePost = async (ruta, file) => {
     }
     return data;
   } catch (e) {
-    console.log('error', e);
+    console.log("error", e);
     return null;
   }
 };
@@ -117,9 +122,9 @@ export const baseGetFile = async (ruta) => {
 
 export const baseGetBlobFile = async (ruta) => {
   const { data } = await axios({
-    method: 'get',
+    method: "get",
     url: `${ruta}`,
-    responseType: 'blob',
+    responseType: "blob",
   });
   return URL.createObjectURL(data);
 };
@@ -136,15 +141,15 @@ export async function baseGetImageDataUrl(ruta) {
 
 export const multiPartPost = async (ruta, cuerpo) => {
   let header =
-    token == ''
+    token == ""
       ? {}
       : {
-          authorization: 'Bearer ' + token,
+          authorization: "Bearer " + token,
         };
 
   try {
     const res = await fetch(`${ruta}`, {
-      method: 'POST',
+      method: "POST",
       headers: header,
       body: cuerpo,
     });
@@ -155,22 +160,22 @@ export const multiPartPost = async (ruta, cuerpo) => {
       return data;
     }
   } catch (e) {
-    console.log('error', e);
+    console.log("error", e);
     return null;
   }
 };
 
 export const multiPartPut = async (ruta, cuerpo) => {
   let header =
-    token == ''
+    token == ""
       ? {}
       : {
-          authorization: 'Bearer ' + token,
+          authorization: "Bearer " + token,
         };
 
   try {
     const res = await fetch(`${ruta}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: header,
       body: cuerpo,
     });
@@ -181,7 +186,7 @@ export const multiPartPut = async (ruta, cuerpo) => {
       return data;
     }
   } catch (e) {
-    console.log('error', e);
+    console.log("error", e);
     return null;
   }
 };

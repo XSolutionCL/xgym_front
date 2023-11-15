@@ -4,6 +4,7 @@ import {
   DeleteOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
+import { formatCLP } from "../../utils/formatMoney";
 
 export const makeColumns = ({
   form,
@@ -21,6 +22,9 @@ export const makeColumns = ({
       dataIndex: "precio_mensual",
       title: "Precio Mensual",
       width: 50,
+      render: (precio_mensual) => (
+        <>{formatCLP(precio_mensual)}</>
+      )
     },
     {
       dataIndex: "cant_meses",
@@ -31,6 +35,9 @@ export const makeColumns = ({
       dataIndex: "precio_total",
       title: "Precio Total",
       width: 30,
+      render: (precio_total) => (
+        <>{formatCLP(precio_total)}</>
+      )
     },
     {
       dataIndex: "cod_activo",
@@ -41,7 +48,7 @@ export const makeColumns = ({
       key: "acciones",
       title: "Acciones",
       render: (record) => (
-        <div className="flex flex-row gap-2 justify-center text-center">
+        <div className="flex flex-row justify-center gap-2 text-center">
           <Tooltip title="Editar Plan">
             <Button
               type="link"

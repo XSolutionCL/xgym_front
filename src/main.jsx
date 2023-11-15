@@ -60,7 +60,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <ConfigProvider locale={locale}>
+        <ConfigProvider 
+          locale={locale}
+          theme={{
+            token: {
+              fontFamily: '"Noto Sans", sans-serif, "Apple Color Emoji"',
+            },
+        }}
+        >
           <App />
           <Toaster
             position="top-right"

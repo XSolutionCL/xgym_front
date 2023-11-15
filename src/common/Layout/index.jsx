@@ -6,6 +6,7 @@ import {
   theme,
   Dropdown,
   Avatar,
+  Typography,
 } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
@@ -14,6 +15,8 @@ import { siglas } from "../../utils/formatStrings";
 import { useQueryClient } from "react-query";
 
 const { Header, Content, Footer, Sider } = Layout;
+
+const { Title } = Typography;
 
 const sidebarItems = routes.map((route, index) => {
   if (route.insideBar) {
@@ -69,15 +72,15 @@ const Layer = ({ children }) => {
   ];
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, fontFamily },
   } = theme.useToken();
 
   return (
     <Layout className="w-screen h-screen overflow-hidden">
-      <Header className="flex w-full justify-between items-center bg-gray-100">
-        <div className="flex justify-center items-center text-center h-full gap-2">
-          <img className="w-10 h-2/3" src="./logo.jpg" alt="Logo" />
-          <h1 className="text-gray-600 text-center text-2xl">XGYM</h1>
+      <Header className="flex flex-row items-center justify-between w-full bg-gray-100">
+        <div className="flex flex-row items-center justify-center h-full gap-2 text-center">
+          <Avatar className="w-14 h-14" src="/logo.png" alt="Logo" />
+          <Title level={2} className="flex items-center justify-center h-full mt-4 text-center">Be Better</Title>
         </div>
         <Dropdown
           menu={{
@@ -128,7 +131,7 @@ const Layer = ({ children }) => {
         </Layout>
       </Content>
       <Footer style={{ textAlign: "center" }}>
-        XGYM ©2023 Desarrollado por XSolution
+        XGYM ©2023 Desarrollado por <a className="animate-pulse" href="https://www.xsolution.cl" target="_blank">XSolution</a>.
       </Footer>
     </Layout>
   );

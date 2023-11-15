@@ -9,6 +9,7 @@ import {
     TimePicker
 } from 'antd';
 import ChileanRutify from 'chilean-rutify';
+import { formatterNumber, parserNumber } from '../../utils/formatMoney';
 
 const {RangePicker} = DatePicker;
 const {TextArea} = Input;
@@ -62,7 +63,10 @@ const CustomForm = ({onFinish, form, fields}) => {
       date: <DatePicker format="DD-MM-YYYY" {...props} style={{ width: "100%" }}/>,
       time: <TimePicker format='HH:mm' {...props}/>,
       dateRange: <RangePicker format="DD-MM-YYYY" {...props}/>,
-      number: <InputNumber {...props} style={{ width: "100%" }}/>,
+      number: <InputNumber 
+                {...props} 
+                style={{ width: "100%" }}
+              />,
       textarea: <TextArea rows={4} {...props}/>,
     };
     return items[type];
