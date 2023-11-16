@@ -26,7 +26,7 @@ export const Pagos = () => {
 
   const { list } = data ? data : [];
   
-  const { data: dataPagos, isFetching: isDataCrearLoading } = useFormCreatePagos(modalIsOpen);
+  const { data: dataPagos, isFetching: isDataCrearLoading } = useFormCreatePagos(modalIsOpen, editingPago);
 
   const { clientes, formas_pago } = dataPagos ? dataPagos: [];
 
@@ -42,6 +42,7 @@ export const Pagos = () => {
 
   useEffect(() => {
     if (clientes && clienteSelected) {
+      console.log(clientes, clienteSelected);
       const person = clientes.find((item) => item.value === clienteSelected);
       setSelectedClientePlanes([...person.planes]);
     }
@@ -62,7 +63,7 @@ export const Pagos = () => {
       }
       setselectedCuotas(result);
 
-      form.setFieldValue("monto_cuota", plan.monto_cuota);
+      form.setFieldValue("monto_cuota", plan?.monto_cuota);
     }
   }, [planesSelected, clientes, selectedClientePlanes]);
 

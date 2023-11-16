@@ -10,11 +10,11 @@ import {
 
 const key = "pagos";
 
-export const useFormCreatePagos = (search) => {
-  
+export const useFormCreatePagos = (search, cod_pago) => {
+    const params = cod_pago ? `/?cod_pago=${cod_pago}` : "";
   return useQuery(
     [key, "data-pago-guardar"],
-    () => axiosGet(`${key}/data-pago-guardar`),
+    () => axiosGet(`${key}/data-pago-guardar${params}`),
     {
       enabled: !!search
     }
@@ -44,7 +44,8 @@ export const useSavePago = () => {
   return useMutation({
       mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
       onSuccess: (response) => {
-          let oldData = queryClient.getQueryData([key, tableFilters]);
+            queryClient.invalidateQueries([key, tableFilters]);
+          /* let oldData = queryClient.getQueryData([key, tableFilters]);
           let newList = [...oldData.list];
           const indexToUpdate = newList.findIndex(
               (item) => item.cod_pago === response.cod_pago
@@ -58,7 +59,7 @@ export const useSavePago = () => {
               ...oldData,
               total: indexToUpdate === -1 ? oldData.total + 1 : oldData.total,
               list: newList
-          });
+          }); */
           toast.success("Pago guardado correctamente");
       },
       onError: () => {
