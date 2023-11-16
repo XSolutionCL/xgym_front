@@ -10,6 +10,7 @@ import Layer from './common/Layout'
 function App() {
 
   const isAuth = useAuthStore((state) => state.isAuth);
+
   const ROUTES = routes.map((route, index) => (
     <Route path={route.path} element={<Layer><route.component/></Layer>} key={index} exact/>
   ))

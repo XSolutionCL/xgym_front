@@ -6,14 +6,19 @@ import { useAuthStore } from "../common/store/authStore";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const { mutate: login, isLoading, isError } = useLoginMutate();
-  const isAuth = useAuthStore((state) => state.isAuth);
-
+  
+  const { mutate, isLoading, isError } = useLoginMutate();
+  const {token} = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuth) navigate("/home");
-  });
+    if (token) {
+      navigate('/home');
+    }
+    if (isError){
+      navigate("/");
+    }
+  }, [isError]);
 
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen">
@@ -31,7 +36,7 @@ const Login = () => {
           layout="vertical"
           className="flex flex-col items-center justify-center"
           initialValues={{ remember: true }}
-          onFinish={login}
+          onFinish={mutate}
         >
           <Form.Item
             name="login_usuario"

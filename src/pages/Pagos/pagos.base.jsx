@@ -40,7 +40,7 @@ export const makeColumns = ({ form, remove, setEditingPago, setModalIsOpen }) =>
     {
       dataIndex: "monto_pago",
       title: "Monto",
-      width: 40,
+      width: 30,
       render: (monto_pago) => (
         <>{formatCLP(monto_pago)}</>
       )

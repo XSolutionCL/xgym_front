@@ -58,10 +58,9 @@ const Layer = ({ children }) => {
           icon={<LogoutOutlined />}
           type="ghost"
           onClick={() => {
-            logout();
-            setPacienteInfo({});
-            queryClient.clear();
             navigate('/');
+            logout();
+            queryClient.clear();
           }}
         >
           Cerrar Sesión
