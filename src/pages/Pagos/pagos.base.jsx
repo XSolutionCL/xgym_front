@@ -27,12 +27,12 @@ export const makeColumns = ({ form, remove, setEditingPago, setModalIsOpen }) =>
     {
       dataIndex: "cant_cuotas_pagadas",
       title: "Cuotas Pagadas",
-      width: 45
+      width: 35
     },
     {
       dataIndex: "monto_cuota",
       title: "Monto Cuota",
-      width: 40,
+      width: 30,
       render: (monto_cuota) => (
         <>{formatCLP(monto_cuota)}</>
       )

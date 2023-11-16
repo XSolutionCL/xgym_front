@@ -56,7 +56,7 @@ const Planes = () => {
 
   return (
     <div className="flex flex-col w-full h-full p-4">
-      <div className="flex flex-row w-full justify-between items-center">
+      <div className="flex flex-row items-center justify-between w-full">
         <Title level={2}>Lista de Planes</Title>
         <Title level={4}>Total: {tableFilters.pagination.total}</Title>
       </div>

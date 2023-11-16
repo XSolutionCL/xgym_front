@@ -1,17 +1,9 @@
 import { Line } from "@ant-design/plots";
-import { useRef } from "react";
 
-export const LineChart = ({
-  data = [],
-  xField,
-  yField,
-  xName,
-  yName,
-  ref = useRef,
-}) => {
+export const LineChart = ({ data = [], xField, yField, xName, yName, chartRef }) => {
   return (
     <Line
-      title={{
+      /* title={{
         visible: false,
         alignTo: "left",
         text: "Helloaaaa",
@@ -19,7 +11,7 @@ export const LineChart = ({
           fontSize: 18,
           fill: "black",
         },
-      }}
+      }} */
       style={{ width: "100%", height: "90%" }}
       data={data}
       xField={xField}
@@ -69,13 +61,15 @@ export const LineChart = ({
         title: {
           visible: false,
           // offset: 32,
-          text: xName,  
+          text: xName,
         },
         /* type: props.isTime ? 'time' : 'linear',
         mask: props.mask || (props.isTime ? DEFAULT_DATE_TIME_FORMAT : undefined) */
       }}
       onReady={(plot) => {
-        ref.current = plot;
+        if (chartRef) {
+          chartRef.current = plot;
+        }
       }}
     />
   );

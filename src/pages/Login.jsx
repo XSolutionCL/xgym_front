@@ -19,14 +19,12 @@ const Login = () => {
     <div className="flex flex-col items-center justify-center w-screen h-screen">
       <Card
         bordered
-        className="w-1/4 shadow-sm h-1/2 bg-slate-50 shadow-amber-200"
+        className="w-auto h-auto shadow-sm bg-slate-50 shadow-amber-200"
         title={
           <div className="flex flex-row items-center justify-center w-full gap-2 mt-2">
-            <img className="w-32 h-32" src="/logo.png" alt="Logo" />
-            {/* <Text className="text-xl">XGYM</Text> */}
+            <img className="w-20 h-20 lg:w-32 lg:h-32" src="/logo.png" alt="Logo" />
           </div>
         }
-        
       >
         <Form
           name="login_form"

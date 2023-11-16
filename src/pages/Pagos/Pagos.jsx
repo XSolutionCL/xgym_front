@@ -69,7 +69,6 @@ export const Pagos = () => {
   const cuotaSelected = Form.useWatch("cant_cuotas_pagadas", form);
   
   useEffect(() => {
-    console.log("USEEFFECT 3");
     if (cuotaSelected) {
       form.setFieldValue(
         "monto_pago",
@@ -79,7 +78,6 @@ export const Pagos = () => {
   }, [cuotaSelected]);
 
   const handleSubmit = (values) => {
-    console.log("Aaaaa");
     const cuerpo = {
       ...values,
       fecha_pago: dayjs(values.fecha_pago).format('YYYY-MM-DD'),
