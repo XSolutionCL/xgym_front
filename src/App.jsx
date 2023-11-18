@@ -11,9 +11,12 @@ function App() {
 
   const isAuth = useAuthStore((state) => state.isAuth);
 
-  const ROUTES = routes.map((route, index) => (
-    <Route path={route.path} element={<Layer><route.component/></Layer>} key={index} exact/>
-  ))
+  const ROUTES = routes.map((route, index) => {
+
+    if(route.name !== "divider") {
+      return <Route path={route.path} element={<Layer><route.component/></Layer>} key={index} exact/>
+    }
+})
 
   return (
     <Routes>

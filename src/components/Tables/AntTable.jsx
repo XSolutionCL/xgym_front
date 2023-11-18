@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Table, Pagination } from 'antd';
+import { Table, Typography } from 'antd';
 import useTableFilters from '../../common/store/tableFiltersStore';
 
 
-const makeColumns = (columns, tableFilters) => {
+const makeColumns = (columns) => {
     const modifiedColumns = columns.map((col, i) => ({
         ...col,
         responsive: ['xs', 'md'],
@@ -16,6 +16,8 @@ const makeColumns = (columns, tableFilters) => {
     
     return modifiedColumns;
 }
+
+const { Title } = Typography;
 
 
 const AntTable = (
@@ -68,6 +70,11 @@ const AntTable = (
                 loading={loading}
                 bordered
                 onChange={handleTableChange}
+                footer={() => 
+                    <div className='flex justify-end w-full p-0 -mb-2'>
+                        <Title level={5}>Total: {tableFilters.pagination?.total}</Title>
+                    </div>
+                }
                 // sticky
                 /* scroll={{
                     y: 'max-content',

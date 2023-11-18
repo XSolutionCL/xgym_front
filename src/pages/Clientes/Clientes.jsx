@@ -95,7 +95,6 @@ const Clientes = () => {
             size="large"
             onSearch={onSearch}
           />
-          <Title level={4}>Total: {tableFilters.pagination.total}</Title>
         </div>
       </div>
       <div className="flex flex-row justify-start mb-2">

@@ -20,15 +20,15 @@ const CustomForm = ({onFinish, form, fields}) => {
     if (field.type === 'select') {
       return (
         <Select
-          {...props}
           showSearch
           allowClear
+          mode={field.isMulti && "multiple"}
           style={{ width: '100%' }}
-          placeholder={'Seleccione'}
+          placeholder={field.label}
           optionFilterProp="children"
-          filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
         >
-          {field.options?.map((option) => (
+          {field.options.map((option) => (
             <Select.Option key={option.value} value={option.value}>
               {option.label}
             </Select.Option>
@@ -62,7 +62,7 @@ const CustomForm = ({onFinish, form, fields}) => {
       rut: <Input onChange={handleRutChange} maxLength={12} {...props}/>,
       date: <DatePicker format="DD-MM-YYYY" {...props} style={{ width: "100%" }}/>,
       time: <TimePicker format='HH:mm' {...props}/>,
-      dateRange: <RangePicker format="DD-MM-YYYY" {...props}/>,
+      dateRange: <RangePicker format="DD-MM-YYYY" {...props} style={{ width: "100%" }}/>,
       number: <InputNumber 
                 {...props} 
                 style={{ width: "100%" }}

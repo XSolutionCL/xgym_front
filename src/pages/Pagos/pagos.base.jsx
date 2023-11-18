@@ -92,8 +92,7 @@ export const makeColumns = ({ form, remove, setEditingPago, setModalIsOpen }) =>
 };
 
 export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, formasPago }) => {
-  
-  
+
   const fields = [
     {
       name: "cod_cliente",
@@ -146,6 +145,41 @@ export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, f
       prefix: "CLP",
       formatter: (value) => formatterNumber(value),
       parser: (value) => parserNumber(value)      
+    },
+  ];
+  return fields;
+};
+
+
+export const makeFilterFields = ({ clientes, planes, formasPago }) => {
+  const fields = [
+    {
+      name: "cod_cliente",
+      label: "Cliente",
+      type: "select", 
+      options: clientes || [],
+    },
+    {
+      name: "cod_plan",
+      label: "Plan",
+      type: "select",
+      options: planes, 
+    },
+    {
+      name: "desde",
+      label: "Desde",
+      type: "date",
+    },
+    {
+      name: "hasta",
+      label: "Hasta",
+      type: "date",
+    },
+    {
+      name: "cod_forma_pago",
+      label: "Forma Pago",
+      type: "select",
+      options: formasPago || [],     
     },
   ];
   return fields;

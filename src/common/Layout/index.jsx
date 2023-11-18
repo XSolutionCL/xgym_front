@@ -7,6 +7,7 @@ import {
   Dropdown,
   Avatar,
   Typography,
+  Divider,
 } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
@@ -19,6 +20,20 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
 const sidebarItems = routes.map((route, index) => {
+  if (index === 0){
+    return {
+      type: 'group', // Must have
+      label: <Divider orientation="left" style={{margin: 0, padding: 0}}>Sistema</Divider>,
+      children: [],
+    }
+  }
+  if (route.name === "divider"){
+    return {
+      type: 'group', // Must have
+      label: <Divider orientation="left" style={{margin: 0, padding: 0}}>Configuración</Divider>,
+      children: [],
+    }
+  }
   if (route.insideBar) {
     return {
       key: String(index + 1),
@@ -45,10 +60,10 @@ const Layer = ({ children }) => {
   const profile = useAuthStore((state) => state.profile);
 
   const items = [
-    {
+    /* {
       label: <p>Por SI</p>,
       key: "0",
-    },
+    }, */
     {
       type: "divider",
     },

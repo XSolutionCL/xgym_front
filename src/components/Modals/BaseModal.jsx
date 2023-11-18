@@ -9,6 +9,8 @@ const BaseModal = ({
   onCancel = () => {}, 
   isModalOpen, 
   setIsModalOpen, 
+  extraButtons=<></>,
+  filters=<></>,
   ...props
 }) => {
 
@@ -23,9 +25,15 @@ const BaseModal = ({
   
   return (
     <>
-      <Button type="primary" className="text-black" onClick={showModal}>
-        {text}
-      </Button>
+      <div className='flex flex-row justify-between w-full gap-1'>
+        <div className='flex flex-row items-center justify-start gap-1'>
+          <Button type="primary" className="text-black" onClick={showModal}>
+            {text}
+          </Button>
+          {extraButtons}
+        </div>
+        {filters}
+      </div>
       <Modal
         {...props}
         title={title}

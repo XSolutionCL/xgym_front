@@ -18,7 +18,7 @@ const useTableFilters = create((set) => ({
     },
     filters: {},
   },
-  setTableFilters: (filters) => set(() => ({ tableFilters: filters })),
+  setTableFilters: (fil) => set(() => ({ tableFilters: fil })),
 }))
 
 export default useTableFilters;

@@ -57,7 +57,6 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ConfigProvider 
@@ -66,7 +65,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             token: {
               fontFamily: '"Noto Sans", sans-serif, "Apple Color Emoji"',
             },
-        }}
+            components:{
+              Table: {
+                  "footerBg": "rgb(255, 255, 255)",
+                  "headerBg": "rgb(255, 255, 255)"
+                }
+            }
+          }}
         >
           <App />
           <Toaster
@@ -121,5 +126,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </BrowserRouter>
       <ReactQueryDevtools/>
     </QueryClientProvider>
-  </React.StrictMode>,
 )

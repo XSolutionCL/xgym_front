@@ -1,26 +1,30 @@
 import { useState } from "react";
-import { Form, Spin, Typography } from "antd";
-import { makeColumns, makeModalFields } from "./pagos.base";
-import { useFormCreatePagos, usePaginatePagos, usePagoDelete, useSavePago } from "../../hooks/pagos";
+import { Button, Form, Spin, Typography } from "antd";
+import { makeColumns, makeFilterFields, makeModalFields } from "./pagos.base";
+import { useFormCreatePagos, useGetFiltersOps, usePaginatePagos, usePagoDelete, useSavePago } from "../../hooks/pagos";
 import AntTable from "../../components/Tables/AntTable";
 import BaseModal from "../../components/Modals/BaseModal";
 import CustomForm from "../../components/Forms/CustomForm";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import useTableFilters from "../../common/store/tableFiltersStore";
+import { FaRegFileExcel } from "react-icons/fa";
+import Filters from "../../components/Filters/Filters";
 
 
 const { Title } = Typography;
 
 export const Pagos = () => {
 
-  const [tableFilters] = useTableFilters((state) => {
+  const [tableFilters, setTableFilters] = useTableFilters((state) => {
     state.tableFilters.sorter.field = 'cod_pago';
-    return [state.tableFilters];
+    return [state.tableFilters, state.setTableFilters];
 });
+
 
   const [editingPago, setEditingPago] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [filtersIsOpen, setFiltersIsOpen] = useState(false);
 
   const { data, isFetching: pagosIsLoading } = usePaginatePagos();
 
@@ -35,10 +39,25 @@ export const Pagos = () => {
 
   const [form] = Form.useForm();
 
+  const {data: filtersOps, isFetching: isFilterDataIsLoading} = useGetFiltersOps(filtersIsOpen);
+
+  const { planes: planesOps, clientes: clientesOps, formas_pago: formaPagosOps } = filtersOps ? filtersOps : [];
+
   //Poblando el campo 'Planes'
   const clienteSelected = Form.useWatch("cod_cliente", form);
   
   const [selectedClientePlanes, setSelectedClientePlanes] = useState([]);
+
+  useEffect(() => {
+    
+    return () => {
+      setTableFilters({
+        ...tableFilters,
+        filters: {}
+    });
+    }
+  }, [])
+  
 
   useEffect(() => {
     if (clientes && clienteSelected) {
@@ -104,7 +123,6 @@ export const Pagos = () => {
     <div className="flex flex-col w-full h-full p-4">
       <div className="flex flex-row items-center justify-between w-full">
         <Title level={2}>Lista de Pagos</Title>
-        <Title level={4}>Total: {tableFilters.pagination.total}</Title>
       </div>
       <div className="flex flex-row justify-start mb-2">
         <BaseModal
@@ -133,9 +151,34 @@ export const Pagos = () => {
               })}
             />
           }
+          extraButtons={
+            <div className="flex flex-row w-full">
+              <Button
+                className="items-center text-black"
+                type="primary" 
+                onClick={() => {}} 
+                icon={<FaRegFileExcel/>}
+              >
+                Exportar
+              </Button>
+            </div>
+          }
+          filters={
+            <Filters
+              loading={isFilterDataIsLoading}
+              isOpen={filtersIsOpen}
+              setIsOpen={setFiltersIsOpen}
+              fields={makeFilterFields({
+                clientes: clientesOps || [],
+                planes: planesOps || [],
+                formasPago: formaPagosOps || [],
+              })}
+              tableFilters={tableFilters}
+              setTableFilters={setTableFilters}
+            />
+          }
         />
       </div>
-
       <AntTable
         columns={makeColumns({
           form: form,

@@ -5,15 +5,18 @@ export const axiosPaginateGet = async (ruta, params) => {
   const token = useAuthStore.getState().token;
   const { sorter, filters } = params;
   const { current, pageSize } = params.pagination ? params.pagination : {};
-  const searchParams = filters.search
-    ? `&search=${filters.search}`
-    : "";
+  let filtersParams = "";
+  if (Object.keys(filters).length > 0){
+    Object.keys(filters).map(key => {
+      filtersParams += `&${key}=${filters[key]}`;
+    })
+  }
   const { data } = await axios.get(
     `${ruta}/?current=${current}&pageSize=${pageSize}${
       sorter.field && sorter.order ? "&field=" + sorter.field : ""
     }${
       sorter.order && sorter.order !== "ascend" ? "&order=desc" : "&order=asc"
-    }${searchParams}`,
+    }${filtersParams}`,
     {
       headers: {
         "Content-Type": "application/json",
