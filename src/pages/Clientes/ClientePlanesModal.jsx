@@ -1,9 +1,10 @@
 import { Button, Descriptions, Form, Modal, Table, Tabs } from "antd"
 import { makeModalColumns, makeModalFields } from "./clientes.base";
-import { useAscociarPlanCliente, useGetHistoricoPlanes } from "../../hooks/clientes";
+import { useAscociarPlanCliente, useDesasociarPlan, useGetHistoricoPlanes } from "../../hooks/clientes";
 import CustomForm from "../../components/Forms/CustomForm";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { formatCLP } from "../../utils/formatMoney";
 
 
 const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
@@ -15,6 +16,8 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
     const { planes, historico } = data ? data : [];
 
     const { mutate: asociarPlan , isLoading } = useAscociarPlanCliente();
+
+    const { mutate: desasociarPlan, desPlanIsLoading } = useDesasociarPlan();
 
     const [form] = Form.useForm();
 
@@ -109,10 +112,13 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
                     children: 
                         <>
                             <Table
-                            rowKey="cod_historial_cliente_planes"
-                                loading={isFetching}
+                                size="small"
+                                rowKey="cod_historial_cliente_planes"
+                                loading={isFetching || desPlanIsLoading}
                                 dataSource={historico}
-                                columns={makeModalColumns()}
+                                columns={makeModalColumns({
+                                    desasociarPlan: desasociarPlan
+                                })}
                             />
                         </>,
                   },
@@ -120,7 +126,7 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
                     key: '2',
                     label: 'Asociar Nuevo Plan',
                     children: 
-                        <div className="flex flex-row-reverse justify-center items-center w-full h-full gap-3">
+                        <div className="flex flex-row-reverse items-center justify-center w-full h-full gap-3">
                             <Descriptions 
                                 bordered 
                                 layout="vertical"
@@ -141,14 +147,14 @@ const ClientePlanesModal = ({isModalOpen, setIsModalOpen}) => {
                                     {
                                         key: '2',
                                         label: 'Precio Mensual',
-                                        children: <p>{selectedPlan?.precio_mensual}</p>,
+                                        children: <p>{formatCLP(selectedPlan?.precio_mensual)}</p>,
                                         span: 4
                                     },
                                     
                                     {
                                         key: '3',
                                         label: 'Precio Total',
-                                        children: <p>{selectedPlan?.precio_total}</p>,
+                                        children: <p>{formatCLP(selectedPlan?.precio_total)}</p>,
                                         span: 4
                                     },
                                 ]}

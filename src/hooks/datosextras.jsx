@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import useTableFilters from "../common/store/tableFiltersStore";
-import { axiosDelete, axiosPaginateGet, axiosPost } from "../apis/calls";
+import { axiosDelete, axiosGet, axiosPaginateGet, axiosPost } from "../apis/calls";
 
 
 const key = "datos_extras";
@@ -20,6 +20,14 @@ export const usePaginateDatosExtras = () => {
                 setTableFilters(newFilters);
             },
         }
+    ); 
+}
+
+
+export const useGetDatosEops = () => {
+    return useQuery(
+        [key, "ops"],
+        () => axiosGet(`${key}/ops`),
     ); 
 }
 

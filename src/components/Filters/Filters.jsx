@@ -1,9 +1,10 @@
-import { Button, Form, Modal, Spin } from "antd";
+import { Button, Form, Modal, Result, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { IoFilterCircle } from "react-icons/io5";
 import CustomForm from "../Forms/CustomForm";
 import dayjs from "dayjs";
+import { SmileOutlined } from '@ant-design/icons';
 
 
 const Filters = ({
@@ -55,7 +56,7 @@ const Filters = ({
         setIsOpen(false);
     }
     
-    
+    const [developing, setDeveloping] = useState(true);
 
   return (
     <>
@@ -82,11 +83,21 @@ const Filters = ({
             { loading ? 
                 <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />
                 :
-                <CustomForm
-                onFinish={onFinish}
-                form={form}
-                fields={fields}
-            />
+                developing ? 
+                <div className="flex flex-col items-center justify-center w-full h-full">
+                  <Result
+                    status="info"
+                    icon={<SmileOutlined />}
+                    title="En Desarrollo"
+                    subTitle="Pronto estará disponible esta opción."
+                    extra={<Button  onClick={() => setIsOpen(false)}>Back Home</Button>}
+                  />
+                </div>
+                :<CustomForm
+                    onFinish={onFinish}
+                    form={form}
+                    fields={fields}
+                />
             }
         </Modal>
     </>

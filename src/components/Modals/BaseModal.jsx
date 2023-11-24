@@ -3,14 +3,16 @@ import { Button, Modal } from 'antd';
 
 const BaseModal = ({ 
   title, 
-  text, 
+  text,
   component = <></>,
   onOk = () => {} , 
+  onOkText="Aceptar",
   onCancel = () => {}, 
   isModalOpen, 
   setIsModalOpen, 
   extraButtons=<></>,
   filters=<></>,
+  width=520,
   ...props
 }) => {
 
@@ -36,8 +38,9 @@ const BaseModal = ({
       </div>
       <Modal
         {...props}
+        width={width}
         title={title}
-        okText="Aceptar"
+        okText={onOkText}
         destroyOnClose
         okButtonProps={{
           className: 'text-black',

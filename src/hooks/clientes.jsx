@@ -26,11 +26,12 @@ export const usePaginateClientes = () => {
 
 export const useSaveCliente = () => {
     const queryClient = useQueryClient();
-    const { tableFilters } = useTableFilters();
+    // const { tableFilters } = useTableFilters();
     return useMutation({
         mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
         onSuccess: (response) => {
-            let oldData = queryClient.getQueryData([key, tableFilters]);
+            queryClient.invalidateQueries([key]);
+            /* let oldData = queryClient.getQueryData([key, tableFilters]);
             let newList = [...oldData.list];
             const indexToUpdate = newList.findIndex(
                 (item) => item.cod_cliente === response.cod_cliente
@@ -44,7 +45,7 @@ export const useSaveCliente = () => {
                 ...oldData,
                 total: indexToUpdate === -1 ? oldData.total + 1 : oldData.total,
                 list: newList
-            });
+            }); */
             toast.success("Cliente guardado correctamente");
         },
         onError: () => {
@@ -61,14 +62,28 @@ export const useClienteDelete = () => {
         onSuccess: (response) => {
             toast.success("Cliente eliminado correctamente");
             queryClient.invalidateQueries([key]);
-            const list = queryClient.getQueryData([key]);
+            /* const list = queryClient.getQueryData([key]);
             if (list) {
             const newList = list.filter(record => record.id !== response.cod_cliente);
             queryClient.setQueryData(key, newList);
-            }
+            } */
         },
         onError: () => {
             toast.error("Error al eliminar el cliente");
+        }
+  })}
+
+
+  export const useDesasociarPlan = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (cuerpo) => axiosDelete(`${key}/desasociar-plan`, cuerpo),
+        onSuccess: (response) => {
+            toast.success("Plan desacociado correctamente");
+            queryClient.invalidateQueries([key + "data-asociar-plan"]);
+        },
+        onError: () => {
+            toast.error("Error al desacociadar el plan");
         }
   })}
 
@@ -89,7 +104,7 @@ export const useAscociarPlanCliente = () => {
     return useMutation({
         mutationFn: (cuerpo) => axiosPost(`${key}/asociar-plan`, cuerpo),
         onSuccess: (response, vars) => {
-            queryClient.setQueryData([key + "data-asociar-plan"] , old => [...old||[], {...response}]);
+            queryClient.invalidateQueries([key + "data-asociar-plan"]);
             toast.success("Plan asociado correctamente");
         },
         onError: () => {

@@ -177,7 +177,21 @@ export const makeItems = ({ sexos }) => {
   return fields;
 };
 
-export const makeModalColumns = () => {
+export const makeItemsDextras = ({datosEops}) => {
+  const items = datosEops?.map(d => (
+    {
+      name: ["datos_extras", d.value],
+      label: d.label,
+      type: "text",
+      required: false,
+    }
+  ));
+    console.log("ITEMS", items);
+  return items;
+}
+
+
+export const makeModalColumns = ({desasociarPlan}) => {
   const columns = [
     {
       dataIndex: "desc_plan",
@@ -218,49 +232,20 @@ export const makeModalColumns = () => {
       align: "center",
       width: 30,
     },
-    /* {
+    {
         key: "acciones",
         title: "Acciones",
         render: record => (
           <div className="flex flex-row justify-center gap-2 text-center">
-            <Tooltip title="Ver Plan">
-                  <Button type="link" onClick={() => {
-                      // setEditingClient(record.cod_cliente);
-                      setPlanesIsModalOpen(record);
-                  }} icon={<CgGym size="1.5em"/>}/>
-              </Tooltip>
-              <Tooltip title="Editar cliente">
-                  <Button type="link" onClick={() => {
-                      setEditingClient(record.cod_cliente);
-                      setModalIsOpen(true);
-                      form.setFieldsValue({
-                      ...record,
-                      fn_cliente: dayjs(record.fn_cliente, 'YYYY-MM-DD')
-                      });
-                  }} icon={<EditOutlined />}/>
-              </Tooltip>
-              <Tooltip placement="topLeft" title="Eiminar cliente">
-                  <Popconfirm
-                      title="Cuidado!!!"
-                      description="Está seguro de eliminar el cliente?"
-                      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                      placement="left"
-                      onConfirm={() => remove({cod_cliente: record.cod_cliente})}
-                      okButtonProps={{ type: 'default', danger: true }}
-                      okText="Si"
-                      cancelText="No"
-                  >
-                      <Button
-                          danger
-                          type="link" 
-                          icon={<DeleteOutlined size="1.5em" />} 
-                      />
-                  </Popconfirm>
+            <Tooltip title="Eliminar Plan">
+                  <Button disabled={record.cod_tiene_pagos === "S"} type="link" onClick={() => {
+                      desasociarPlan(record);
+                  }} icon={<DeleteOutlined size="1.5em"/>}/>
               </Tooltip>
           </div>
         ),
         width: 20
-      } */
+      }
   ];
   return columns;
 };
@@ -293,6 +278,7 @@ export const makeModalFields = ({ planes, form }) => {
       label: "Cuotas",
       type: "number",
       required: true,
+      min: 1
     },
     {
       name: "monto_cuota",

@@ -1,10 +1,13 @@
 
 
 export function formatCLP(num) {
-	return num.toLocaleString("es-CL",{
-		style: "currency",
-		currency: "CLP"
-	})
+  if (num){
+    return num.toLocaleString("es-CL",{
+      style: "currency",
+      currency: "CLP"
+    })
+  }
+  return "";
 }
 
 export const formatterNumber = (val) => {

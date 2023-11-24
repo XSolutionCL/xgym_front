@@ -64,7 +64,7 @@ const FlexForm = ({ onFinish, form, fields }) => {
 
   return (
     <Form
-      className="grid w-full h-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+      className="grid w-full h-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       form={form}
       onFinish={onFinish}
       layout='vertical'

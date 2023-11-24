@@ -1,13 +1,14 @@
-import { Typography, Spin, Form, Modal, Input, Button } from "antd";
+import { Typography, Spin, Form, Modal, Input, Button, Tabs } from "antd";
 import AntTable from "../../components/Tables/AntTable";
 import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
 import { useEffect, useState } from "react";
-import CustomForm from "../../components/Forms/CustomForm";
+import FlexForm from "../../components/Forms/FlexForm";
 import dayjs from "dayjs";
-import { makeColumns, makeItems } from "./clientes.base";
+import { makeColumns, makeItems, makeItemsDextras } from "./clientes.base";
 import ClientePlanesModal from "./ClientePlanesModal";
+import { useGetDatosEops } from "../../hooks/datosextras";
 
 
 const { Title } = Typography;
@@ -30,9 +31,11 @@ const Clientes = () => {
   const { mutate: save, isLoading } = useSaveCliente();
   const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const { data: datosEops, isFetching: datosEisLoading } = useGetDatosEops();
 
-  const [planesIsModalOpen, setPlanesIsModalOpen] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [planesIsModalOpen, setPlanesIsModalOpen] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -48,8 +51,10 @@ const Clientes = () => {
     const cuerpo = {
       ...d,
       fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
+      datos_extras: d.datos_extras
+        ?.map((d, i) => (d !== null ? { [`${i}`]: d } : {})),
       ...(editingClient ? { cod_cliente: editingClient } : {}),
-    };    
+    }; 
 
     form.isFieldsTouched() ? save(cuerpo) : null;
     
@@ -77,7 +82,7 @@ const Clientes = () => {
     }
   }
 
-  if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
+  if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving || datosEisLoading) {
     return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
   }
 
@@ -102,6 +107,7 @@ const Clientes = () => {
           style={{
             top: 50
           }}
+          width={1000}
           title={`${editingClient ? 'Editar' : 'Crear'} Cliente`}
           text={"Añadir Cliente"}
           isModalOpen={modalIsOpen}
@@ -109,12 +115,29 @@ const Clientes = () => {
           onCancel={onCancel}
           onOk={form.submit}
           component={
-            <CustomForm
-              form={form} 
-              onFinish={handleSubmit} 
-              fields={makeItems({
-                sexos: data.sexos || []
-              })}
+            <Tabs
+              items={[
+                {
+                  key: "1",
+                  label: "Datos Principales",
+                  children: <FlexForm
+                              form={form} 
+                              onFinish={handleSubmit} 
+                              fields={makeItems({
+                                sexos: data.sexos || []
+                              })}
+                            />
+                },
+                {
+                  key: "2",
+                  label: "Datos Extras",
+                  children: <FlexForm
+                              form={form} 
+                              onFinish={handleSubmit} 
+                              fields={makeItemsDextras({datosEops:datosEops})}
+                            />
+                }
+              ]}
             />
           }
         />
