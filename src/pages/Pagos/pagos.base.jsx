@@ -91,7 +91,7 @@ export const makeColumns = ({ form, remove, setEditingPago, setModalIsOpen }) =>
   return columns;
 };
 
-export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, formasPago }) => {
+export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, formasPago, formaPagoSelected }) => {
 
   const fields = [
     {
@@ -147,6 +147,18 @@ export const makeModalFields = ({ data, selectedClientePlanes, selectedCuotas, f
       parser: (value) => parserNumber(value)      
     },
   ];
+
+  if ([2, 4].includes(Number(formaPagoSelected))){
+    fields.push(
+      {
+        name: "codigo_autorizacion",
+        label: "Cod Autorización",
+        required: false,
+        type: "text",    
+      },
+    )
+  }
+
   return fields;
 };
 

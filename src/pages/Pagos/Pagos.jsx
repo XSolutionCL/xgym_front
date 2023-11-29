@@ -89,6 +89,8 @@ export const Pagos = () => {
   }, [planesSelected, clientes, selectedClientePlanes]);
 
   const cuotaSelected = Form.useWatch("cant_cuotas_pagadas", form);
+
+  const formaPagoSelected = Form.useWatch("cod_forma_pago", form);
   
   useEffect(() => {
     if (cuotaSelected) {
@@ -114,6 +116,7 @@ export const Pagos = () => {
   const onCancel = () => {
     form.resetFields();
     setModalIsOpen(false);
+    setEditingPago(null);
   };
 
 
@@ -149,7 +152,8 @@ export const Pagos = () => {
                 data: clientes || [],
                 selectedClientePlanes: selectedClientePlanes,
                 selectedCuotas: selectedCuotas,
-                formasPago: formas_pago
+                formasPago: formas_pago,
+                formaPagoSelected:formaPagoSelected
               })}
             />
           }
