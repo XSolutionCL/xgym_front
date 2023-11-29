@@ -64,7 +64,7 @@ export const makeColumns = ({
     },
     {
       dataIndex: "desc_sexo",
-      title: "Sexo",
+      title: "Género",
       width: 30,
     },
     {
@@ -162,7 +162,7 @@ export const makeItems = ({ sexos }) => {
     },
     {
       name: "cod_sexo",
-      label: "Sexo",
+      label: "Género",
       type: "select",
       options: sexos,
       required: true,

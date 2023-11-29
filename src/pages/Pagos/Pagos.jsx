@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Button, Form, Spin, Typography } from "antd";
 import { makeColumns, makeFilterFields, makeModalFields } from "./pagos.base";
-import { useFormCreatePagos, useGetFiltersOps, usePaginatePagos, usePagoDelete, useSavePago } from "../../hooks/pagos";
+import { useDownloadExcelPagos, useFormCreatePagos, useGetFiltersOps, usePaginatePagos, usePagoDelete, useSavePago } from "../../hooks/pagos";
 import AntTable from "../../components/Tables/AntTable";
 import BaseModal from "../../components/Modals/BaseModal";
 import CustomForm from "../../components/Forms/CustomForm";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import useTableFilters from "../../common/store/tableFiltersStore";
-import { FaRegFileExcel } from "react-icons/fa";
+import { RiFileExcel2Fill } from "react-icons/ri";
 import Filters from "../../components/Filters/Filters";
 
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export const Pagos = () => {
 
@@ -42,6 +42,8 @@ export const Pagos = () => {
   const {data: filtersOps, isFetching: isFilterDataIsLoading} = useGetFiltersOps(filtersIsOpen);
 
   const { planes: planesOps, clientes: clientesOps, formas_pago: formaPagosOps } = filtersOps ? filtersOps : [];
+
+  const { mutate: downloadExcel } = useDownloadExcelPagos();
 
   //Poblando el campo 'Planes'
   const clienteSelected = Form.useWatch("cod_cliente", form);
@@ -154,12 +156,14 @@ export const Pagos = () => {
           extraButtons={
             <div className="flex flex-row w-full">
               <Button
-                className="items-center text-black"
+                className="text-black"
                 type="primary" 
-                onClick={() => {}} 
-                icon={<FaRegFileExcel/>}
+                onClick={() => downloadExcel()} 
               >
-                Exportar
+                <div className="flex flex-row items-center justify-center w-full h-full gap-4 text-center">
+                <RiFileExcel2Fill color="green"/>
+                  <Text>Exportar</Text>
+                </div>
               </Button>
             </div>
           }

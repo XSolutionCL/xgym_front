@@ -1,8 +1,12 @@
-import moment from "moment";
+import dayjs from "dayjs";
+
 
 
 export const formatTime24Hrs = (value) => {
-    let input_time = value;
-    let date_a = moment(input_time, "HH:mm");
-    return date_a.format("HH:mm");
+    return dayjs(value, "HH:mm").format("HH:mm");
+}
+
+
+export const formatFullDateToTime24Hrs = (value) => {
+    return dayjs(value).format("HH:mm");
 }

@@ -123,11 +123,17 @@ export const baseGetFile = async (ruta) => {
   return null;
 };
 
-export const baseGetBlobFile = async (ruta) => {
+export const baseGetBlobFile = async (ruta, cuerpo) => {
+  const token = useAuthStore.getState().token;
   const { data } = await axios({
-    method: "get",
+    method: 'post',
     url: `${ruta}`,
-    responseType: "blob",
+    data: cuerpo,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob',
   });
   return URL.createObjectURL(data);
 };

@@ -6,7 +6,9 @@ import {
   axiosGet,
   axiosPaginateGet,
   axiosPost,
+  baseGetBlobFile,
 } from "../apis/calls";
+import { dowloadExcel } from "../utils/pdf";
 
 const key = "pagos";
 
@@ -91,3 +93,24 @@ export const usePagoDelete = () => {
     },
   });
 };
+
+
+export const useDownloadExcelPagos = () => {
+  let toastID = null;
+  return useMutation({
+    mutationFn: (data) => baseGetBlobFile(`${key}/excel`, data),
+    onMutate: (mutation) => {
+      toastID = toast.loading("Generando Excel...");
+    },
+    onSuccess: (response) => {
+      if (response){
+        dowloadExcel(response);
+        toastID && toast.success("Se generó el Excel correctamente!", {id: toastID});
+      }
+    },
+    onError: (error) => {
+      toastID && toast.error("Error al generar Excel", {id: toastID});
+      console.log("ERROR", error);
+    }
+})
+}
