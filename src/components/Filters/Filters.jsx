@@ -56,7 +56,7 @@ const Filters = ({
         setIsOpen(false);
     }
     
-    const [developing, setDeveloping] = useState(false);
+    const [developing, setDeveloping] = useState(true);
 
   return (
     <>
