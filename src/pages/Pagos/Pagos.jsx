@@ -63,7 +63,6 @@ export const Pagos = () => {
 
   useEffect(() => {
     if (clientes && clienteSelected) {
-      console.log(clientes, clienteSelected);
       const person = clientes.find((item) => item.value === clienteSelected);
       setSelectedClientePlanes([...person.planes]);
     }

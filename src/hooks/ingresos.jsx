@@ -36,3 +36,18 @@ export const useGetIngresosDia = () => {
       },
     });
   };
+
+
+  export const useRegistrarIngresoDiario = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (cuerpo) => axiosPost(`${key}/diario`, cuerpo),
+      onSuccess: (response) => {
+        queryClient.invalidateQueries([key]);
+        toast.success("Ingreso diario cliente guardado correctamente");
+      },
+      onError: () => {
+        toast.error("Error al guardar ingreso diario cliente");
+      },
+    });
+  };

@@ -186,7 +186,6 @@ export const makeItemsDextras = ({datosEops}) => {
       required: false,
     }
   ));
-    console.log("ITEMS", items);
   return items;
 }
 

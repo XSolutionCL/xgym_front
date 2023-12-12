@@ -41,7 +41,7 @@ export const makeColumns = ({
     },
     {
       dataIndex: "cod_activo",
-      title: "Código Actico",
+      title: "Código Activo",
       width: 30,
     },
     {

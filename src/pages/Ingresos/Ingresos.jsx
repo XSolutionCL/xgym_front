@@ -1,12 +1,27 @@
-import { Button, Result, Divider, Form, Input, Typography, Descriptions, Tag, Spin, Table, Tooltip } from "antd";
+import { 
+  Button, 
+  Result, 
+  Divider, 
+  Form, 
+  Input, 
+  Typography, 
+  Descriptions, 
+  Tag, 
+  Spin, 
+  Table, 
+  Tooltip
+} from "antd";
 import { useNavigate } from "react-router-dom";
-import { SmileOutlined } from '@ant-design/icons';
+import { SmileOutlined, DollarOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
-import { useGetClienteInfo, useGetIngresosDia, useRegistrarIngreso } from "../../hooks/ingresos";
+import { useGetClienteInfo, useGetIngresosDia, useRegistrarIngreso, useRegistrarIngresoDiario } from "../../hooks/ingresos";
 import { makeColumns, makeDescClienteItems, makeDescPlanItems } from "./ingresos.base";
 import { toast } from 'react-hot-toast';
 import { PiSealWarningThin } from "react-icons/pi";
 import { CgGym } from "react-icons/cg";
+import { v4 } from "uuid";
+import IngresoDiarioModal from "./IngresoDiarioModal";
+import HistoricoDrawer from "./HistoricoDrawer";
 
 const { Title, Text } = Typography;
 
@@ -18,13 +33,21 @@ const Ingreso = () => {
 
   const [isDeveloping, setIsDeveloping] = useState(false);
 
+  const [pagoDiarioModalIsOpen, setPagoDiarioModalIsOpen] = useState(false);
+
+  const [historicoDrawerIsOpen, setHistoricoDrawerIsOpen] = useState(false);
+
   const [codCliente, setCodCliente] = useState(null);
 
   const { data: ingresosDia, isFetching: ingresosDiaisLoading } = useGetIngresosDia();
 
-  const { data: clienteInfo, isFetching: clienteInfoIsLoading, isFetched } = useGetClienteInfo(codCliente);
+  const { data: clInfo, isFetching: clienteInfoIsLoading, isFetched } = useGetClienteInfo(codCliente);
+
+  const { clienteInfo, historico } = clInfo ? clInfo: {};
 
   const { mutate: ingresar, isLoading: isIngresando } = useRegistrarIngreso();
+
+  const { mutate: ingresarDiario, isLoading: isIngresandoDiario } = useRegistrarIngresoDiario();
 
   useEffect(() => {
     if (!clienteInfo && isFetched){
@@ -48,7 +71,16 @@ const Ingreso = () => {
     setCodCliente(null);
   }
   
-  
+  const handleIngresoDiario = ({cod_forma_pago, codigo_autorizacion}) => {
+    ingresarDiario({ 
+      cod_cliente: clienteInfo.cod_cliente,
+      cod_forma_pago,
+      codigo_autorizacion
+    });
+    form.resetFields();
+    setCodCliente(null);
+  }
+
 
   return (
     <>
@@ -84,12 +116,24 @@ const Ingreso = () => {
             </Form.Item>
           </Form>
           <Divider className="mt-2 mb-5"/>
-          {clienteInfoIsLoading || isIngresando ? <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" /> :
-            clienteInfo &&  
-            <div className="flex flex-col justify-start w-full h-full gap-4">
+          {clienteInfoIsLoading || isIngresando || isIngresandoDiario ? 
+              <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" /> :
+            clienteInfo && 
+            <div className="relative flex flex-col justify-start w-full h-full gap-4">
+              <IngresoDiarioModal open={pagoDiarioModalIsOpen} setOpen={setPagoDiarioModalIsOpen} pagar={handleIngresoDiario}/>
+              <HistoricoDrawer open={historicoDrawerIsOpen} setOpen={setHistoricoDrawerIsOpen} historico={historico}/>
               {/* Info Cliente */}
               <Descriptions 
-                title="Cliente"
+                title={
+                  <div className="flex items-center justify-start gap-2">
+                    <>Cliente</>
+                    { historico?.length > 0 &&
+                      <Tooltip title="Ver Histórico">
+                        <Button size="small" icon={<UnorderedListOutlined />} onClick={() => setHistoricoDrawerIsOpen(true)}/>
+                      </Tooltip>
+                    }
+                  </div>
+                }
                 bordered
                 extra={<div className="flex flex-row items-center gap-2">
                         {
@@ -101,15 +145,24 @@ const Ingreso = () => {
                         <Tag color={clienteInfo.acceso_permitido === "S" ? "green": "volcano"}>
                           {clienteInfo.acceso_permitido === "S" ? "Acceso Permitido": "Acceso Denegado"}
                         </Tag>
-                        <Tooltip title="Confirmar Ingreso">
-                          <Button
-                            // shape="circle"
-                            size="small"
-                            disabled={clienteInfo.acceso_permitido === "N" || ingresosDia.map(c => c.cod_cliente).includes(clienteInfo?.cod_cliente)}
-                            onClick={() => handleIngreso()}
-                            icon={<CgGym size="1.5em"/>} 
-                          />
-                        </Tooltip>
+                        { clienteInfo.acceso_permitido === "S" && !ingresosDia.map(c => c.cod_cliente).includes(clienteInfo?.cod_cliente) &&
+                          <Tooltip title="Confirmar Ingreso">
+                            <Button
+                              size="small"
+                              onClick={() => handleIngreso()}
+                              icon={<CgGym size="1.5em"/>} 
+                            />
+                          </Tooltip>
+                        }
+                        {clienteInfo.acceso_permitido === "N" && !ingresosDia.map(c => c.cod_cliente).includes(clienteInfo?.cod_cliente) &&
+                          <Tooltip title="Pago Diario">
+                            <Button
+                              size="small"
+                              icon={<DollarOutlined />}
+                              onClick={() => setPagoDiarioModalIsOpen(true)}
+                            />
+                          </Tooltip>
+                        }
                       </div>
                       }
                 layout="vertical" 
@@ -128,12 +181,16 @@ const Ingreso = () => {
         {/* Ingresos del día */}
         <Divider type="vertical" className="h-full"/>
         <div className="flex flex-col w-full h-full lg:overflow-hidden lg:w-1/2">
-          <div className="flex flex-row items-center justify-between w-full text-center lg:overflow-hidden">
+          <div className="flex flex-row items-center justify-between w-full text-center">
             <Title className="p-0 m-0" level={4}>Ingreso Diario</Title>
             <Title className="p-0 m-0" level={5}>Total: {ingresosDia?.length}</Title>
           </div>
           <Table
             className="overflow-y-auto"
+            pagination={{
+              simple: true,
+            }}
+            rowKey={(record) => v4()}
             bordered
             dataSource={ingresosDia}
             loading={ingresosDiaisLoading}

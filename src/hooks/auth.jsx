@@ -12,7 +12,6 @@ export const useLoginMutate = () => {
   const navigate = useNavigate();
   return useMutation((cuerpo) => axiosPost(`${key}/login`, cuerpo), {
     onSuccess: (response) => {
-      console.log(response);
       queryClient.setQueryData([key], response);
       const { token, ...userInfo } = response;
       setProfile(userInfo)

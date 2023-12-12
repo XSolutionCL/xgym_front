@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import useTableFilters from "../common/store/tableFiltersStore";
-import { axiosDelete, axiosPaginateGet, axiosPost } from "../apis/calls";
+import { axiosDelete, axiosGet, axiosPaginateGet, axiosPost } from "../apis/calls";
 
 
 const key = "formas_pago";
@@ -74,3 +74,15 @@ export const useDeleteFormasPago = () => {
             toast.error("Error al eliminar la forma de pago");
         }
   })}
+
+
+
+  export const useFormasPagoOps = (open) => {
+    return useQuery(
+        [key, "ops"],
+        () => axiosGet(`${key}/ops`),
+        {
+            enabled: !!open
+        }
+    ); 
+}

@@ -41,7 +41,6 @@ const Planes = () => {
     setModalIsOpen(false);
     setEditingPlan(null);
     form.resetFields();
-    console.log(cuerpo);
   }
 
   const onCancel = () => {

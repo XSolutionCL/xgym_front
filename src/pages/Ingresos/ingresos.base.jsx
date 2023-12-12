@@ -90,3 +90,30 @@ export const makeDescPlanItems = ({clienteInfo}) => {
   ];
   return items;
 }
+
+
+export const makePagoDiarioFields = ({formasPago, formaPagoSelected}) => {
+
+  const fields = [
+    {
+      name: "cod_forma_pago",
+      label: "Forma Pago",
+      type: "select",
+      required: true,
+      options: formasPago || [],     
+    },
+  ];
+
+  if ([2, 4].includes(Number(formaPagoSelected))){
+    fields.push(
+      {
+        name: "codigo_autorizacion",
+        label: "Cod Autorización",
+        required: false,
+        type: "text",    
+      },
+    )
+  }
+
+  return fields;
+}
