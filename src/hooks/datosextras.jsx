@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import useTableFilters from "../common/store/tableFiltersStore";
 import { axiosDelete, axiosGet, axiosPaginateGet, axiosPost } from "../apis/calls";
+import { omit } from "lodash";
 
 
 const key = "datos_extras";
@@ -10,7 +11,7 @@ const key = "datos_extras";
 export const usePaginateDatosExtras = () => {
     const { tableFilters, setTableFilters } = useTableFilters();
     return useQuery(
-        [key, tableFilters],
+        [key, omit(tableFilters, ['pagination.total'])],
         () => axiosPaginateGet(`${key}/all`, tableFilters),
         {
             keepPreviousData: true,
@@ -19,6 +20,7 @@ export const usePaginateDatosExtras = () => {
                 newFilters.pagination.total = response.total;
                 setTableFilters(newFilters);
             },
+            enabled: !!tableFilters.sorter.field
         }
     ); 
 }

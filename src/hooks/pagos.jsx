@@ -9,6 +9,7 @@ import {
   baseGetBlobFile,
 } from "../apis/calls";
 import { dowloadExcel } from "../utils/pdf";
+import { omit } from "lodash";
 
 const key = "pagos";
 
@@ -32,7 +33,7 @@ export const useGetFiltersOps = (search) => {
 export const usePaginatePagos = () => {
   const { tableFilters, setTableFilters } = useTableFilters();
   return useQuery(
-    [key, tableFilters],
+    [key, omit(tableFilters, ['pagination.total'])],
     () => axiosPaginateGet(`${key}/all`, tableFilters),
     {
       keepPreviousData: true,
@@ -41,6 +42,7 @@ export const usePaginatePagos = () => {
         newFilters.pagination.total = response.total;
         setTableFilters(newFilters);
       },
+      enabled: !!tableFilters.sorter.field
     }
   );
 };

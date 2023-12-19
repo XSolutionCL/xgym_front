@@ -22,6 +22,7 @@
     "chilean-rutify": "^2.1.0",
     "dayjs": "^1.11.9",
     "jspdf": "^2.5.1",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-countup": "^6.4.2",
     "react-dom": "^18.2.0",
