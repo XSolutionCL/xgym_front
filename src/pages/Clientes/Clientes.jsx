@@ -100,7 +100,6 @@ const Clientes = () => {
   return (
     <div className="flex flex-col w-full h-full p-4">
       <ClientePlanesModal isModalOpen={planesIsModalOpen} setIsModalOpen={setPlanesIsModalOpen}/>
-      <button onClick={() => console.log("Holaaa", tableFilters)}>VER</button>
       <div className="flex flex-row items-center justify-between w-full">
         <Title level={2}>Lista de Clientes</Title>
         <div className="flex flex-col items-end justify-between w-1/4 gap-4">

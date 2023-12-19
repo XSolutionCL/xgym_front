@@ -33,7 +33,6 @@ const AntTable = (
     const {tableFilters, setTableFilters} = useTableFilters()
 
     const handleTableChange = (pagination, filters, sorter) => {
-        console.log("SORTER", sorter);
         setTableFilters({
           pagination,
           filters,
