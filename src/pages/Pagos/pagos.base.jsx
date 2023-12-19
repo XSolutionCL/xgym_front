@@ -7,6 +7,11 @@ import dayjs from "dayjs";
 export const makeColumns = ({ form, remove, setEditingPago, setModalIsOpen }) => {
   const columns = [
     {
+      dataIndex: "cod_pago",
+      title: "Cod",
+      width: 20,
+    },
+    {
       dataIndex: "desc_cliente",
       title: "Cliente",
       width: 50,

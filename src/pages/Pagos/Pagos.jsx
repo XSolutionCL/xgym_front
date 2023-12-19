@@ -16,12 +16,6 @@ const { Title, Text } = Typography;
 
 export const Pagos = () => {
 
-  const [tableFilters, setTableFilters] = useTableFilters((state) => {
-    state.tableFilters.sorter.field = 'cod_pago';
-    return [state.tableFilters, state.setTableFilters];
-});
-
-
   const [editingPago, setEditingPago] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [filtersIsOpen, setFiltersIsOpen] = useState(false);
@@ -50,13 +44,28 @@ export const Pagos = () => {
   
   const [selectedClientePlanes, setSelectedClientePlanes] = useState([]);
 
+  const [tableFilters, setTableFilters] = useTableFilters((state) => [state.tableFilters, state.setTableFilters]);
+
   useEffect(() => {
-    
+    if (!tableFilters.sorter.field){
+      setTableFilters({
+        ...tableFilters,
+        sorter: {
+          ...tableFilters.sorter,
+          field: "cod_pago"
+        }
+      })
+    }
     return () => {
       setTableFilters({
         ...tableFilters,
-        filters: {}
-    });
+        filters: {},
+        sorter: {
+          columnKey: 0,
+          field: null,
+          order: "descend"
+        }
+      })
     }
   }, [])
   

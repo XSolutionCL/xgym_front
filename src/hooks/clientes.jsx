@@ -10,7 +10,7 @@ const key = "clientes";
 export const usePaginateClientes = () => {
     const { tableFilters, setTableFilters } = useTableFilters();
     return useQuery(
-        [key, tableFilters], 
+        [key, {...tableFilters}], 
         () => axiosPaginateGet(`${key}/all`, tableFilters),
         {
             keepPreviousData: true,
@@ -19,6 +19,7 @@ export const usePaginateClientes = () => {
                 newFilters.pagination.total = response.total;
                 setTableFilters(newFilters);
             },
+            enabled: !!tableFilters.sorter.field
         }
     ); 
 }

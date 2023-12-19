@@ -69,7 +69,13 @@ const Home = () => {
             />
           </div>
           <LineChart 
-            data={ingresos || []} 
+            data={ingresos?.map(i => {
+              return {
+                fecha: i.fecha,
+                dia: String(i.dia),
+                cantidad_ingresos: i.cantidad_ingresos
+            }
+            }) || []}
             chartRef={g1Ref} 
             xField="dia"
             xName="Días"
@@ -87,8 +93,14 @@ const Home = () => {
               onClick={() => downloadImage(g2Ref)}
             />
           </div>
-          <LineChart 
-            data={pagos || []} 
+          <LineChart
+            data={pagos?.map(p => {
+              return {
+                fecha: p.fecha,
+                dia: String(p.dia),
+                monto_pagos: p.monto_pagos
+            }
+            }) || []} 
             chartRef={g2Ref} 
             xField="dia"
             yField="monto_pagos"

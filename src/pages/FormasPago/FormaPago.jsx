@@ -3,7 +3,7 @@ import AntTable from "../../components/Tables/AntTable";
 //import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./formapago.base";
 import { useDeleteFormasPago, usePaginateFormasPago, useSaveFormasPago } from "../../hooks/formaspago";
@@ -14,11 +14,6 @@ const { Title } = Typography;
 
 const FormaPago = () => {
 
-  const [tableFilters] = useTableFilters((state) => {
-    state.tableFilters.sorter.field = 'cod_forma_pago';
-    return [state.tableFilters];
-});
-
   const [form] = Form.useForm();
 
   const [editingFormaPago, setEditingFormaPago] = useState(null)
@@ -27,7 +22,32 @@ const FormaPago = () => {
   const { mutate: save, isLoading } = useSaveFormasPago();
   const { mutate: remove, isLoading: isRemoving } = useDeleteFormasPago();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [tableFilters, setTableFilters] = useTableFilters((state) => [state.tableFilters, state.setTableFilters]);
+
+  useEffect(() => {
+    if (!tableFilters.sorter.field){
+      setTableFilters({
+        ...tableFilters,
+        sorter: {
+          ...tableFilters.sorter,
+          field: "cod_forma_pago"
+        }
+      })
+    }
+    return () => {
+      setTableFilters({
+        ...tableFilters,
+        filters: {},
+        sorter: {
+          columnKey: 0,
+          field: null,
+          order: "descend"
+        }
+      })
+    }
+  }, [])
 
   const handleSubmit = (d) => {
     const cuerpo = {

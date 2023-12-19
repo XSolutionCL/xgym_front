@@ -14,7 +14,7 @@ const useTableFilters = create((set) => ({
     sorter: {
       columnKey: 0,
       field: null,
-      order: "ascend"
+      order: "descend"
     },
     filters: {},
   },

@@ -1,9 +1,8 @@
 import { Typography, Spin, Form } from "antd";
 import AntTable from "../../components/Tables/AntTable";
-//import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./datosextras.base";
 import { useDeleteDatosExtras, usePaginateDatosExtras, useSaveDatosExtras } from "../../hooks/datosextras";
@@ -14,11 +13,6 @@ const { Title } = Typography;
 
 const DatosExtras = () => {
 
-  const [tableFilters] = useTableFilters((state) => {
-    state.tableFilters.sorter.field = 'cod_datos_extra';
-    return [state.tableFilters];
-});
-
   const [form] = Form.useForm();
 
   const [editingDatosExtra, setEditingDatosExtra] = useState(null)
@@ -27,7 +21,32 @@ const DatosExtras = () => {
   const { mutate: save, isLoading } = useSaveDatosExtras();
   const { mutate: remove, isLoading: isRemoving } = useDeleteDatosExtras();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [tableFilters, setTableFilters] = useTableFilters((state) => [state.tableFilters, state.setTableFilters]);
+
+  useEffect(() => {
+    if (!tableFilters.sorter.field){
+      setTableFilters({
+        ...tableFilters,
+        sorter: {
+          ...tableFilters.sorter,
+          field: "cod_datos_extra"
+        }
+      })
+    }
+    return () => {
+      setTableFilters({
+        ...tableFilters,
+        filters: {},
+        sorter: {
+          columnKey: 0,
+          field: null,
+          order: "descend"
+        }
+      })
+    }
+  }, [])
 
   const handleSubmit = (d) => {
     const cuerpo = {

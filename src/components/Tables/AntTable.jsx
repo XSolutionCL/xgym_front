@@ -11,7 +11,7 @@ const makeColumns = (columns) => {
         align: 'center',
         ellipsis: true,
         sorter: col.dataIndex ? true : false,
-        sortDirections: ['ascend', 'descend', 'ascend']
+        sortDirections: ['ascend', 'descend']
     }));
     
     return modifiedColumns;
@@ -33,6 +33,7 @@ const AntTable = (
     const {tableFilters, setTableFilters} = useTableFilters()
 
     const handleTableChange = (pagination, filters, sorter) => {
+        console.log("SORTER", sorter);
         setTableFilters({
           pagination,
           filters,

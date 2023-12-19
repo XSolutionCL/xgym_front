@@ -17,11 +17,6 @@ const { Search } = Input;
 
 const Clientes = () => {
 
-  const [tableFilters, setTableFilters] = useTableFilters((state) => {
-    state.tableFilters.sorter.field = 'cod_cliente';
-    return [state.tableFilters, state.setTableFilters];
-});
-
   const [form] = Form.useForm();
 
   const [editingClient, setEditingClient] = useState(null)
@@ -37,11 +32,27 @@ const Clientes = () => {
 
   const [planesIsModalOpen, setPlanesIsModalOpen] = useState(false);
 
+  const [tableFilters, setTableFilters] = useTableFilters((state) => [state.tableFilters, state.setTableFilters]);
+
   useEffect(() => {
+    if (!tableFilters.sorter.field){
+      setTableFilters({
+        ...tableFilters,
+        sorter: {
+          ...tableFilters.sorter,
+          field: "cod_cliente"
+        }
+      })
+    }
     return () => {
       setTableFilters({
         ...tableFilters,
-        filters: {}
+        filters: {},
+        sorter: {
+          columnKey: 0,
+          field: null,
+          order: "descend"
+        }
       })
     }
   }, [])
@@ -89,6 +100,7 @@ const Clientes = () => {
   return (
     <div className="flex flex-col w-full h-full p-4">
       <ClientePlanesModal isModalOpen={planesIsModalOpen} setIsModalOpen={setPlanesIsModalOpen}/>
+      <button onClick={() => console.log("Holaaa", tableFilters)}>VER</button>
       <div className="flex flex-row items-center justify-between w-full">
         <Title level={2}>Lista de Clientes</Title>
         <div className="flex flex-col items-end justify-between w-1/4 gap-4">

@@ -3,7 +3,7 @@ import AntTable from "../../components/Tables/AntTable";
 //import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./planes.base";
 import { useDeletePlan, usePaginatePlanes, useSavePlan } from "../../hooks/planes";
@@ -14,21 +14,40 @@ const { Title } = Typography;
 
 const Planes = () => {
 
-  const [tableFilters] = useTableFilters((state) => {
-    state.tableFilters.sorter.field = 'cod_plan';
-    return [state.tableFilters];
-});
-
   const [form] = Form.useForm();
 
   const [editingPlan, setEditingPlan] = useState(null)
-
   
   const { data, isFetching, isError } = usePaginatePlanes();
   const { mutate: save, isLoading } = useSavePlan();
   const { mutate: remove, isLoading: isRemoving } = useDeletePlan();
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
+
+  const [tableFilters, setTableFilters] = useTableFilters((state) => [state.tableFilters, state.setTableFilters]);
+
+  useEffect(() => {
+    if (!tableFilters.sorter.field){
+      setTableFilters({
+        ...tableFilters,
+        sorter: {
+          ...tableFilters.sorter,
+          field: "cod_plan"
+        }
+      })
+    }
+    return () => {
+      setTableFilters({
+        ...tableFilters,
+        filters: {},
+        sorter: {
+          columnKey: 0,
+          field: null,
+          order: "descend"
+        }
+      })
+    }
+  }, [])
 
   const handleSubmit = (d) => {
      const cuerpo = {
