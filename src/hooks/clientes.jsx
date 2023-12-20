@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import useTableFilters from "../common/store/tableFiltersStore";
-import { axiosDelete, axiosGet, axiosPaginateGet, axiosPost } from "../apis/calls";
+import { axiosDelete, axiosGet, axiosPaginateGet, axiosPost, baseGetBlobFile } from "../apis/calls";
 import { omit } from 'lodash';
+import { downloadExcel } from "../utils/files";
 
 
 const key = "clientes";
@@ -115,3 +116,24 @@ export const useAscociarPlanCliente = () => {
     }
     ); 
 }
+
+
+export const useDownloadExcelClientes = () => {
+    let toastID = null;
+    return useMutation({
+      mutationFn: (data) => baseGetBlobFile(`${key}/excel`, data),
+      onMutate: (mutation) => {
+        toastID = toast.loading("Generando Excel...");
+      },
+      onSuccess: (response) => {
+        if (response){
+          downloadExcel(response, key);
+          toastID && toast.success("Se generó el Excel correctamente!", {id: toastID});
+        }
+      },
+      onError: (error) => {
+        toastID && toast.error("Error al generar Excel", {id: toastID});
+        console.log("ERROR", error);
+      }
+  })
+  }

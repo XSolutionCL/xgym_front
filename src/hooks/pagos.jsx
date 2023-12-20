@@ -8,7 +8,7 @@ import {
   axiosPost,
   baseGetBlobFile,
 } from "../apis/calls";
-import { dowloadExcel } from "../utils/pdf";
+import { downloadExcel } from "../utils/files";
 import { omit } from "lodash";
 
 const key = "pagos";
@@ -49,11 +49,11 @@ export const usePaginatePagos = () => {
 
 export const useSavePago = () => {
   const queryClient = useQueryClient();
-  const { tableFilters } = useTableFilters();
+  // const { tableFilters } = useTableFilters();
   return useMutation({
     mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
     onSuccess: (response) => {
-      queryClient.invalidateQueries([key, tableFilters]);
+      queryClient.invalidateQueries([key]);
       /* let oldData = queryClient.getQueryData([key, tableFilters]);
           let newList = [...oldData.list];
           const indexToUpdate = newList.findIndex(
@@ -106,7 +106,7 @@ export const useDownloadExcelPagos = () => {
     },
     onSuccess: (response) => {
       if (response){
-        dowloadExcel(response);
+        downloadExcel(response, key);
         toastID && toast.success("Se generó el Excel correctamente!", {id: toastID});
       }
     },

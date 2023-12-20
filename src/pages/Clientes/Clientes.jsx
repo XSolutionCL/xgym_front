@@ -1,6 +1,6 @@
 import { Typography, Spin, Form, Modal, Input, Button, Tabs } from "antd";
 import AntTable from "../../components/Tables/AntTable";
-import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
+import { useClienteDelete, useDownloadExcelClientes, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
 import { useEffect, useState } from "react";
@@ -9,9 +9,10 @@ import dayjs from "dayjs";
 import { makeColumns, makeItems, makeItemsDextras } from "./clientes.base";
 import ClientePlanesModal from "./ClientePlanesModal";
 import { useGetDatosEops } from "../../hooks/datosextras";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Search } = Input;
 
 
@@ -27,6 +28,8 @@ const Clientes = () => {
   const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
 
   const { data: datosEops, isFetching: datosEisLoading } = useGetDatosEops();
+
+  const {mutate: downloadExcel} = useDownloadExcelClientes();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -150,6 +153,20 @@ const Clientes = () => {
                 }
               ]}
             />
+          }
+          extraButtons={
+            <div className="flex flex-row w-full">
+              <Button
+                className="text-black"
+                type="primary" 
+                onClick={() => downloadExcel()} 
+              >
+                <div className="flex flex-row items-center justify-center w-full h-full gap-4 text-center">
+                <RiFileExcel2Fill color="green"/>
+                  <Text>Exportar</Text>
+                </div>
+              </Button>
+            </div>
           }
         />
       </div>
