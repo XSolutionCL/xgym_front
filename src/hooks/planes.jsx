@@ -26,11 +26,12 @@ export const usePaginatePlanes = () => {
 
 export const useSavePlan = () => {
   const queryClient = useQueryClient();
-  const { tableFilters } = useTableFilters();
+  // const { tableFilters } = useTableFilters();
   return useMutation({
     mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
     onSuccess: (response) => {
-      let oldData = queryClient.getQueryData([key, tableFilters]);
+      queryClient.invalidateQueries([key]);
+      /* let oldData = queryClient.getQueryData([key, omit(tableFilters, ['pagination.total'])]);
       let newList = [...oldData.list];
       const indexToUpdate = newList.findIndex(
         (item) => item.cod_plan === response.cod_plan
@@ -40,11 +41,11 @@ export const useSavePlan = () => {
       } else {
         newList[indexToUpdate] = { ...response };
       }
-      queryClient.setQueryData([key, tableFilters], {
+      queryClient.setQueryData([key, omit(tableFilters, ['pagination.total'])], {
         ...oldData,
         total: indexToUpdate === -1 ? oldData.total + 1 : oldData.total,
         list: newList,
-      });
+      }); */
       toast.success("Plan guardado correctamente");
     },
     onError: () => {

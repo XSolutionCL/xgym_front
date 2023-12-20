@@ -28,11 +28,12 @@ export const usePaginateFormasPago = () => {
 
 export const useSaveFormasPago = () => {
     const queryClient = useQueryClient();
-    const { tableFilters } = useTableFilters();
+    // const { tableFilters } = useTableFilters();
     return useMutation({
         mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
         onSuccess: (response) => {
-            let oldData = queryClient.getQueryData([key, tableFilters]);
+            queryClient.invalidateQueries([key]);
+            /* let oldData = queryClient.getQueryData([key, tableFilters]);
             let newList = [...oldData.list];
             const indexToUpdate = newList.findIndex(
                 (item) => item.cod_forma_pago === response.cod_forma_pago
@@ -46,7 +47,7 @@ export const useSaveFormasPago = () => {
                 ...oldData,
                 total: indexToUpdate === -1 ? oldData.total + 1 : oldData.total,
                 list: newList
-            });
+            }); */
             toast.success("Forma de Pago guardada correctamente");
         },
         onError: () => {
