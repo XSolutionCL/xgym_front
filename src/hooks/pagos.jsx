@@ -14,7 +14,7 @@ import { omit } from "lodash";
 const key = "pagos";
 
 export const useFormCreatePagos = (search, cod_pago) => {
-  const params = cod_pago ? `/?cod_pago=${cod_pago}` : "";
+  const params = cod_pago ? `?cod_pago=${cod_pago}` : "";
   return useQuery(
     [key, "data-pago-guardar", cod_pago],
     () => axiosGet(`${key}/data-pago-guardar${params}`),

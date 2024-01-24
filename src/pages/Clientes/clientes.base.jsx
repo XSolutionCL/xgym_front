@@ -1,17 +1,26 @@
-import { Button, Popconfirm, Tooltip } from "antd";
-import { CgGym } from "react-icons/cg";
 import {
   EditOutlined,
   DeleteOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import dayjs from "dayjs";
-import { formatDateDdMmYyyy } from "../../utils/formatDates";
 import {
   formatCLP,
   formatterNumber,
   parserNumber,
 } from "../../utils/formatMoney";
+import dayjs from "dayjs";
+import { formatDateDdMmYyyy } from "../../utils/formatDates";
+import { Button, Popconfirm, Tooltip, Image } from "antd";
+import { CgGym, CgProfile } from "react-icons/cg";
+
+const baseURL = {
+  production: import.meta.env.VITE_PROD_API,
+  qa: import.meta.env.VITE_QA_API,
+  development: import.meta.env.VITE_DEV_API,
+};
+const ENV = import.meta.env.VITE_ENV;
+
+const API_IMAGE_CLIENTES = `${baseURL[ENV]}images/clientes/`
 
 export const makeColumns = ({
   form,
@@ -19,6 +28,8 @@ export const makeColumns = ({
   setEditingClient,
   setModalIsOpen,
   setPlanesIsModalOpen,
+  hasPermission,
+  setUploadModalIsOpen,
 }) => {
   const columns = [
     {
@@ -68,16 +79,47 @@ export const makeColumns = ({
       width: 30,
     },
     {
+      key: "imagen_cliente",
+      title: "Imagen",
+      width: 20,
+      render: (record) => {
+        if (record.imagen_cliente){
+          return (
+            <Image 
+              width={40}
+              height={40}
+              src="avatar.avif"
+              loading="eager"
+              preview={{
+                src: `${API_IMAGE_CLIENTES}${record.imagen_cliente}`,
+                destroyOnClose: true,
+              }}
+            />)
+        }else{
+          return <></>
+        }
+      },
+    },
+    {
       key: "acciones",
       title: "Acciones",
-      width: 25,
+      width: 30,
       render: (record) => (
         <div className="flex flex-row justify-center gap-2 text-center">
-          <Tooltip title="Ver Plan">
+          <Tooltip title="Subir Imagen Cliente">
             <Button
               type="link"
               onClick={() => {
-                // setEditingClient(record.cod_cliente);
+                setUploadModalIsOpen(record.cod_cliente);
+              }}
+              icon={<CgProfile size="1.2em"/>}
+            />
+          </Tooltip>
+          <Tooltip title="Ver Plan">
+            <Button
+              disabled={!hasPermission(1)}
+              type="link"
+              onClick={() => {
                 setPlanesIsModalOpen(record);
               }}
               icon={<CgGym size="1.5em" />}
@@ -86,6 +128,7 @@ export const makeColumns = ({
           <Tooltip title="Editar cliente">
             <Button
               type="link"
+              disabled={!hasPermission(3)}
               onClick={() => {
                 setEditingClient(record.cod_cliente);
                 setModalIsOpen(true);
@@ -110,6 +153,7 @@ export const makeColumns = ({
             >
               <Button
                 danger
+                disabled={!hasPermission(4)}
                 type="link"
                 icon={<DeleteOutlined size="1.5em" />}
               />
@@ -177,20 +221,17 @@ export const makeItems = ({ sexos }) => {
   return fields;
 };
 
-export const makeItemsDextras = ({datosEops}) => {
-  const items = datosEops?.map(d => (
-    {
-      name: ["datos_extras", d.value],
-      label: d.label,
-      type: "text",
-      required: false,
-    }
-  ));
+export const makeItemsDextras = ({ datosEops }) => {
+  const items = datosEops?.map((d) => ({
+    name: ["datos_extras", d.value],
+    label: d.label,
+    type: "text",
+    required: false,
+  }));
   return items;
-}
+};
 
-
-export const makeModalColumns = ({desasociarPlan}) => {
+export const makeModalColumns = ({ desasociarPlan }) => {
   const columns = [
     {
       dataIndex: "desc_plan",
@@ -232,19 +273,24 @@ export const makeModalColumns = ({desasociarPlan}) => {
       width: 30,
     },
     {
-        key: "acciones",
-        title: "Acciones",
-        render: record => (
-          <div className="flex flex-row justify-center gap-2 text-center">
-            <Tooltip title="Eliminar Plan">
-                  <Button disabled={record.cod_tiene_pagos === "S"} type="link" onClick={() => {
-                      desasociarPlan(record);
-                  }} icon={<DeleteOutlined size="1.5em"/>}/>
-              </Tooltip>
-          </div>
-        ),
-        width: 20
-      }
+      key: "acciones",
+      title: "Acciones",
+      render: (record) => (
+        <div className="flex flex-row justify-center gap-2 text-center">
+          <Tooltip title="Eliminar Plan">
+            <Button
+              disabled={record.cod_tiene_pagos === "S"}
+              type="link"
+              onClick={() => {
+                desasociarPlan(record);
+              }}
+              icon={<DeleteOutlined size="1.5em" />}
+            />
+          </Tooltip>
+        </div>
+      ),
+      width: 20,
+    },
   ];
   return columns;
 };
@@ -277,7 +323,7 @@ export const makeModalFields = ({ planes, form }) => {
       label: "Cuotas",
       type: "number",
       required: true,
-      min: 1
+      min: 1,
     },
     {
       name: "monto_cuota",

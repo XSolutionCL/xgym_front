@@ -6,13 +6,13 @@ export const axiosPaginateGet = async (ruta, params) => {
   const { sorter, filters } = params;
   const { current, pageSize } = params.pagination ? params.pagination : {};
   let filtersParams = "";
-  if (Object.keys(filters).length > 0){
-    Object.keys(filters).map(key => {
+  if (Object.keys(filters).length > 0) {
+    Object.keys(filters).map((key) => {
       filtersParams += `&${key}=${filters[key]}`;
-    })
+    });
   }
   const { data } = await axios.get(
-    `${ruta}/?current=${current}&pageSize=${pageSize}${
+    `${ruta}?current=${current}&pageSize=${pageSize}${
       sorter.field && sorter.order ? "&field=" + sorter.field : ""
     }${
       sorter.order && sorter.order !== "ascend" ? "&order=desc" : "&order=asc"
@@ -126,14 +126,14 @@ export const baseGetFile = async (ruta) => {
 export const baseGetBlobFile = async (ruta, cuerpo) => {
   const token = useAuthStore.getState().token;
   const { data } = await axios({
-    method: 'post',
+    method: "post",
     url: `${ruta}`,
     data: cuerpo,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    responseType: 'blob',
+    responseType: "blob",
   });
   return URL.createObjectURL(data);
 };
@@ -149,17 +149,13 @@ export async function baseGetImageDataUrl(ruta) {
 }
 
 export const multiPartPost = async (ruta, cuerpo) => {
-  let header =
-    token == ""
-      ? {}
-      : {
-          authorization: "Bearer " + token,
-        };
-
+  const token = useAuthStore.getState().token;
   try {
-    const res = await fetch(`${ruta}`, {
+    const res = await fetch(`http://localhost:8008/api/v1/clientes/subir_imagen`, {
       method: "POST",
-      headers: header,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: cuerpo,
     });
     const data = await res.json();

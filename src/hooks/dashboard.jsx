@@ -8,7 +8,7 @@ const key = "dashboard";
 export const useDashboardInfo = (desde, hasta) => {
     return useQuery(
         [key, desde, hasta], 
-        () => axiosGet(`${key}/all/?desde=${desde}&hasta=${hasta}`),
+        () => axiosGet(`${key}/all?desde=${desde}&hasta=${hasta}`),
         {
             keepPreviousData: true,
         }

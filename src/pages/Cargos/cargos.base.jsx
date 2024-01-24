@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Tooltip } from "antd";
+import { Button, Popconfirm, Tooltip, Tag, Space } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -8,61 +8,64 @@ import {
 export const makeColumns = ({
   form,
   remove,
-  setEditingUsuario,
+  setEditingCargo,
   setModalIsOpen,
-  hasPermission,
 }) => {
   const columns = [
     {
-      dataIndex: "desc_usuario",
-      title: "Descripción Usuario",
+      dataIndex: "cod_cargo",
+      title: "Cod",
       width: 50,
-    },
-    {
-      dataIndex: "login_usuario",
-      title: "Login Usuario",
-      width: 50,
-    },
+    }, 
     {
       dataIndex: "desc_cargo",
       title: "Cargo",
       width: 50,
     },
     {
+      key: "permisos",
+      title: "Permisos",
+      width: 50,
+      render: (record) => 
+        <Space>
+          {
+            record?.permisos?.map((p, i) => (
+              <Tag color={p.color || "geekblue"} key={i}>{p.label}</Tag>
+            ))
+          }
+        </Space>
+    },   
+    {
       key: "acciones",
       title: "Acciones",
       render: (record) => (
         <div className="flex flex-row justify-center gap-2 text-center">
-          <Tooltip title="Editar Usuario">
+          <Tooltip title="Editar Cargo">
             <Button
               type="link"
-              disabled={!hasPermission(3)}
               onClick={() => {
-                setEditingUsuario(record.cod_usuario);
+                setEditingCargo(record.cod_cargo);
                 setModalIsOpen(true);
                 form.setFieldsValue({
-                  ...record,
+                ...record,
                 });
               }}
               icon={<EditOutlined />}
             />
           </Tooltip>
-          <Tooltip placement="topLeft" title="Eiminar Usuario">
+          <Tooltip placement="topLeft" title="Eiminar Cargo">
             <Popconfirm
               title="Cuidado!!!"
-              description="Está seguro de eliminar el usuario?"
+              description="Está seguro de eliminar el Cargo?"
               icon={<QuestionCircleOutlined style={{ color: "red" }} />}
               placement="left"
-              onConfirm={() => {
-                remove({ cod_usuario: record.cod_usuario });
-              }}
+              onConfirm={ () => remove({cod_cargo: record.cod_cargo}) }
               okButtonProps={{ type: "default", danger: true }}
               okText="Si"
               cancelText="No"
             >
               <Button
                 danger
-                disabled={!hasPermission(4)}
                 type="link"
                 icon={<DeleteOutlined size="1.5em" />}
               />
@@ -76,33 +79,22 @@ export const makeColumns = ({
   return columns;
 };
 
-export const makeItems = ({ cargos }) => {
+export const makeItems = ({permisos}) => {
   const fields = [
     {
-      name: "desc_usuario",
-      label: "Descripción Usuario",
-      type: "text",
-      required: true,
-    },
-    {
-      name: "login_usuario",
-      label: "Login Usuario",
-      type: "text",
-      required: true,
-    },
-    {
-      name: "contrasena",
-      label: "Contraseña",
-      type: "password",
-      required: true,
-    },
-    {
-      name: "cod_cargo",
+      name: "desc_cargo",
       label: "Cargo",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "permisos",
+      label: "Permisos",
       type: "select",
       required: true,
-      options: cargos || [],
-    },
+      isMulti: true,
+      options: permisos || []
+    }       
   ];
   return fields;
 };

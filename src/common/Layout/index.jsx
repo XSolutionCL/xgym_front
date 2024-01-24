@@ -60,10 +60,10 @@ const Layer = ({ children }) => {
   const profile = useAuthStore((state) => state.profile);
 
   const items = [
-    /* {
-      label: <p>Por SI</p>,
+    {
+      label: <p className="text-center">{profile.user_info.desc_cargo}</p>,
       key: "0",
-    }, */
+    },
     {
       type: "divider",
     },

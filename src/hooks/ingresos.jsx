@@ -15,7 +15,7 @@ export const useGetIngresosDia = () => {
   export const useGetClienteInfo = (codCliente) => {
     return useQuery(
       [key, codCliente],
-      () => axiosGet(`${key}/by-cod/?cod_cliente=${codCliente}`),
+      () => axiosGet(`${key}/by-cod?cod_cliente=${codCliente}`),
       {
         enabled: !!codCliente
       }

@@ -1,45 +1,71 @@
-import { Typography, Spin, Form } from "antd";
+import { Typography, Spin, Form, Modal } from "antd";
 import AntTable from "../../components/Tables/AntTable";
-//import { useClienteDelete, usePaginateClientes, useSaveCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomForm from "../../components/Forms/CustomForm";
 import { makeColumns, makeItems } from "./usuarios.base";
+import {
+  useDeleteUsuario,
+  usePaginateUsuarios,
+  useSaveUsuario,
+} from "../../hooks/usuarios";
+import { useHasPermission } from "../../utils/permissions";
 
 const { Title } = Typography;
 
 const Usuarios = () => {
-  const [tableFilters] = useTableFilters((state) => {
-    state.tableFilters.sorter.field = "cod_usuario";
-    return [state.tableFilters];
-  });
+  const { data, isFetching, isError } = usePaginateUsuarios();
+  const { mutate: save, isLoading } = useSaveUsuario();
+  const { mutate: remove, isLoading: isRemoving } = useDeleteUsuario();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const { hasPermission } = useHasPermission();
+
+  const [tableFilters, setTableFilters] = useTableFilters((state) => [
+    state.tableFilters,
+    state.setTableFilters,
+  ]);
+
+  useEffect(() => {
+    if (!tableFilters.sorter.field) {
+      setTableFilters({
+        ...tableFilters,
+        sorter: {
+          ...tableFilters.sorter,
+          field: "cod_usuario",
+        },
+      });
+    }
+    return () => {
+      setTableFilters({
+        ...tableFilters,
+        filters: {},
+        sorter: {
+          columnKey: 0,
+          field: null,
+          order: "descend",
+        },
+      });
+    };
+  }, []);
 
   const [form] = Form.useForm();
 
   const [editingUsuario, setEditingUsuario] = useState(null);
 
-  //TODO
-  //const { data, isFetching, isError } = usePaginateClientes();
-  //const { mutate: save, isLoading } = useSaveCliente();
-  //const { mutate: remove, isLoading: isRemoving } = useClienteDelete();
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const handleSubmit = (d) => {
-    //TODO
-    // const cuerpo = {
-    //   ...d,
-    //   fn_cliente: dayjs(d.fn_cliente).format("YYYY-MM-DD"),
-    //   ...(editingClient ? { cod_cliente: editingClient } : {}),
-    // };
+    const cuerpo = {
+      ...d,
+      ...(editingUsuario ? { cod_usuario: editingUsuario } : {}),
+    };
 
-    // form.isFieldsTouched() ? save(cuerpo) : null;
+    form.isFieldsTouched() ? save(cuerpo) : null;
 
-    // setModalIsOpen(false);
-    // setEditingClient(null);
-    // form.resetFields();
-    console.log(d);
+    setModalIsOpen(false);
+    setEditingClient(null);
+    form.resetFields();
   };
 
   const onCancel = () => {
@@ -47,10 +73,14 @@ const Usuarios = () => {
     setModalIsOpen(false);
   };
 
-  //TODO
-  // if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
-  //   return <Spin className="flex flex-row items-center justify-center w-full h-full" size="large" />;
-  // }
+  if (isFetching || isLoading || isRemoving) {
+    return (
+      <Spin
+        className="flex flex-row items-center justify-center w-full h-full"
+        size="large"
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col w-full h-full p-4">
@@ -67,7 +97,7 @@ const Usuarios = () => {
             <CustomForm
               form={form}
               onFinish={handleSubmit}
-              fields={makeItems()}
+              fields={makeItems({cargos: data?.cargos})}
             />
           }
         />
@@ -75,33 +105,12 @@ const Usuarios = () => {
       <AntTable
         columns={makeColumns({
           form: form,
-          //TODO
-          //remove: remove,
-          remove: () => {},
+          remove: remove,
           setEditingUsuario: setEditingUsuario,
           setModalIsOpen: setModalIsOpen,
+          hasPermission: hasPermission,
         })}
-        //data={data.list}
-        data={[
-          {
-            cod_usuario: 1,
-            desc_usuario: "Descripción Usuario 1",
-            login_usuario: "user1",
-            contrasena: "1.user",
-          },
-          {
-            cod_usuario: 2,
-            desc_usuario: "Descripción Usuario 2",
-            login_usuario: "user2",
-            contrasena: "2.user",
-          },
-          {
-            cod_usuario: 3,
-            desc_usuario: "Descripción Usuario 3",
-            login_usuario: "user3",
-            contrasena: "3.user",
-          },
-        ]}
+        data={data?.list}
       />
     </div>
   );

@@ -9,6 +9,8 @@ import Usuarios from './pages/Usuarios/Usuarios';
 import { Pagos } from './pages/Pagos/Pagos';
 import Ingresos from './pages/Ingresos/Ingresos';
 import { IoFingerPrintOutline } from 'react-icons/io5';
+import { TiGroupOutline } from "react-icons/ti";
+import Cargos from './pages/Cargos/Cargos';
 
 
 const routes = [
@@ -20,6 +22,7 @@ const routes = [
     { name: "Planes", path: '/planes', component: Planes, icon: <CarryOutOutlined/>, insideBar: true },
     { name: "divider"},
     { name: "Usuarios", path: '/usuarios', component: Usuarios, icon: <TeamOutlined/>, insideBar: true },
+    { name: "Cargos", path: '/cargos', component: Cargos, icon: <TiGroupOutline size="1.2em"/>, insideBar: true },
     { name: "Datos Extra", path: '/datos-extra', component: DatosExtras, icon: <IdcardOutlined/>, insideBar: true },  
     { name: "Forma Pago", path: '/forma-pago', component: FormaPago, icon: <LiaMoneyCheckAltSolid size="1.2em"/>, insideBar: true },  
 ];

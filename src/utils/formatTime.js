@@ -10,3 +10,9 @@ export const formatTime24Hrs = (value) => {
 export const formatFullDateToTime24Hrs = (value) => {
     return dayjs(value).format("HH:mm");
 }
+
+
+const test = () => {
+  const t = "Probado Atajos";
+  return test;
+}

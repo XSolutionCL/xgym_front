@@ -1,19 +1,20 @@
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
-import validaToken from "./validToken";
+import { Navigate, Outlet, useNavigate, useLocation} from "react-router-dom";
 import { useAuthStore } from "../common/store/authStore";
 import { toast } from "react-hot-toast";
 import { useEffect } from "react";
+import { useToken } from "../hooks/token";
 
 
 export const ProtectedRoute = ({ isAllowed, children, redirectTo = "/" }) => {
+  const location = useLocation()
   const navigate = useNavigate();
-  const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
-  const { data: validToken, isFetching } = validaToken(token);
+
+  const { isTokenValid, isLoading, error } = useToken();
 
   useEffect(() => {
     const handleLogout = async () => {
-      if (!isAllowed || (!validToken && !isFetching)) {
+      if (!isAllowed && !isTokenValid && location.pathname !== "/" && !isLoading && !error) {
         await logout();
         toast.error("Su sesión expiró. Por favor inicie de nuevo!");
         navigate(redirectTo);
@@ -21,7 +22,7 @@ export const ProtectedRoute = ({ isAllowed, children, redirectTo = "/" }) => {
     };
 
     handleLogout();
-  }, [isAllowed, validToken, isFetching, logout, navigate, redirectTo]);
+  }, [isAllowed, logout, navigate, redirectTo, isTokenValid, isLoading, error]);
 
   return isAllowed ? (children ? children : <Outlet />) : <Navigate to={redirectTo} />;
 };
