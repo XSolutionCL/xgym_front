@@ -4,7 +4,7 @@ import {
   DeleteOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import { formatCLP } from "../../utils/formatMoney";
+import { formatCLP, formatterNumber, parserNumber } from "../../utils/formatMoney";
 
 export const makeColumns = ({
   form,
@@ -103,10 +103,12 @@ export const makeItems = ({form=Form.useForm}) => {
       label: "Precio Mensual",
       type: "number",
       required: true,
-      step: 2,
+      formatter: (value) => formatterNumber(value),
+      parser: (value) => parserNumber(value),
       onChange: () => {
         if(form.getFieldValue("cant_meses")){
-          form.setFieldValue("precio_total", (Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses"))).toFixed(2))
+          const value = Number(Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses")));
+          form.setFieldValue("precio_total", +value.toFixed(2));
         }
       }
     },
@@ -117,7 +119,8 @@ export const makeItems = ({form=Form.useForm}) => {
       required: true,
       onChange: () => {
         if(form.getFieldValue("precio_mensual")){
-          form.setFieldValue("precio_total", (Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses"))).toFixed(2))
+          const value = Number(Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses")));
+          form.setFieldValue("precio_total", +value.toFixed(2));
         }
       }
     },
@@ -126,9 +129,12 @@ export const makeItems = ({form=Form.useForm}) => {
       label: "Precio Total",
       type: "number",
       required: true,
+      formatter: (value) => formatterNumber(value),
+      parser: (value) => parserNumber(value),
       onChange: () => {
         if(form.getFieldValue("precio_total") && form.getFieldValue("cant_meses")){
-          form.setFieldValue("precio_mensual", (Number(form.getFieldValue("precio_total")) /  Number(form.getFieldValue("cant_meses"))).toFixed(2));
+          const value = Number(Number(form.getFieldValue("precio_total")) /  Number(form.getFieldValue("cant_meses")));
+          form.setFieldValue("precio_mensual", +value.toFixed(2));
         }
       },
     },

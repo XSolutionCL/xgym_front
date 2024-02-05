@@ -18,7 +18,7 @@ const Planes = () => {
 
   const [editingPlan, setEditingPlan] = useState(null)
   
-  const { data, isFetching, isError } = usePaginatePlanes();
+  const { data, isLoading: isFetching } = usePaginatePlanes();
   const { mutate: save, isLoading } = useSavePlan();
   const { mutate: remove, isLoading: isRemoving } = useDeletePlan();
 
