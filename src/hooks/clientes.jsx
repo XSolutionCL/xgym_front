@@ -63,10 +63,10 @@ export const useClienteDelete = () => {
 export const useDesasociarPlan = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (cuerpo) => axiosDelete(`${key}/desasociar-plan`, cuerpo),
+    mutationFn: (cuerpo) => axiosDelete(`${key}/desasociar_plan`, cuerpo),
     onSuccess: (response) => {
       toast.success("Plan desacociado correctamente");
-      queryClient.invalidateQueries([key + "data-asociar-plan"]);
+      queryClient.invalidateQueries([key + "data_asociar_plan"]);
     },
     onError: () => {
       toast.error("Error al desacociadar el plan");
@@ -76,8 +76,8 @@ export const useDesasociarPlan = () => {
 
 export const useGetHistoricoPlanes = (cod_cliente) => {
   return useQuery(
-    [key + "data-asociar-plan", cod_cliente],
-    () => axiosGet(`${key}/data-asociar-plan?cod_cliente=${cod_cliente}`),
+    [key + "data_asociar_plan", cod_cliente],
+    () => axiosGet(`${key}/data_asociar_plan?cod_cliente=${cod_cliente}`),
     {
       enabled: !!cod_cliente,
     }
@@ -87,9 +87,9 @@ export const useGetHistoricoPlanes = (cod_cliente) => {
 export const useAscociarPlanCliente = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (cuerpo) => axiosPost(`${key}/asociar-plan`, cuerpo),
+    mutationFn: (cuerpo) => axiosPost(`${key}/asociar_plan`, cuerpo),
     onSuccess: (response, vars) => {
-      queryClient.invalidateQueries([key + "data-asociar-plan"]);
+      queryClient.invalidateQueries([key + "data_asociar_plan"]);
       toast.success("Plan asociado correctamente");
     },
     onError: () => {

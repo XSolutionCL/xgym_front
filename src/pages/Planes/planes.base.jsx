@@ -103,20 +103,34 @@ export const makeItems = ({form=Form.useForm}) => {
       label: "Precio Mensual",
       type: "number",
       required: true,
+      step: 2,
+      onChange: () => {
+        if(form.getFieldValue("cant_meses")){
+          form.setFieldValue("precio_total", (Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses"))).toFixed(2))
+        }
+      }
     },
     {
       name: "cant_meses",
       label: "Cantidad de Meses",
       type: "number",
       required: true,
-      onChange: () => 
-        form.setFieldValue("precio_total", Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses")))
+      onChange: () => {
+        if(form.getFieldValue("precio_mensual")){
+          form.setFieldValue("precio_total", (Number(form.getFieldValue("precio_mensual")) *  Number(form.getFieldValue("cant_meses"))).toFixed(2))
+        }
+      }
     },
     {
       name: "precio_total",
       label: "Precio Total",
       type: "number",
       required: true,
+      onChange: () => {
+        if(form.getFieldValue("precio_total") && form.getFieldValue("cant_meses")){
+          form.setFieldValue("precio_mensual", (Number(form.getFieldValue("precio_total")) /  Number(form.getFieldValue("cant_meses"))).toFixed(2));
+        }
+      },
     },
     {
       name: "cod_activo",
