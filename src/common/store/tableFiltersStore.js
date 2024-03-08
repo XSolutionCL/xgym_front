@@ -6,7 +6,7 @@ const useTableFilters = create((set) => ({
       current: 1,
       pageSize: 10,
       total: 0,
-      defdefaultPageSize: 10,
+      defaultPageSize: 10,
       pageSizeOptions: [10, 25, 50, 100],
       position: ["bottomLeft"],
       showSizeChanger: true

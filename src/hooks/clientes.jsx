@@ -36,7 +36,7 @@ export const useSaveCliente = () => {
   // const { tableFilters } = useTableFilters();
   return useMutation({
     mutationFn: (cuerpo) => axiosPost(`${key}/guardar`, cuerpo),
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([key]);
       toast.success("Cliente guardado correctamente");
     },
@@ -50,7 +50,7 @@ export const useClienteDelete = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (cuerpo) => axiosDelete(`${key}/eliminar`, cuerpo),
-    onSuccess: (response) => {
+    onSuccess: () => {
       toast.success("Cliente eliminado correctamente");
       queryClient.invalidateQueries([key]);
     },
@@ -64,7 +64,7 @@ export const useDesasociarPlan = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (cuerpo) => axiosDelete(`${key}/desasociar_plan`, cuerpo),
-    onSuccess: (response) => {
+    onSuccess: () => {
       toast.success("Plan desacociado correctamente");
       queryClient.invalidateQueries([key + "data_asociar_plan"]);
     },
@@ -88,7 +88,7 @@ export const useAscociarPlanCliente = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (cuerpo) => axiosPost(`${key}/asociar_plan`, cuerpo),
-    onSuccess: (response, vars) => {
+    onSuccess: () => {
       queryClient.invalidateQueries([key + "data_asociar_plan"]);
       toast.success("Plan asociado correctamente");
     },
@@ -102,7 +102,7 @@ export const useDownloadExcelClientes = () => {
   let toastID = null;
   return useMutation({
     mutationFn: (data) => baseGetBlobFile(`${key}/excel`, data),
-    onMutate: (mutation) => {
+    onMutate: () => {
       toastID = toast.loading("Generando Excel...");
     },
     onSuccess: (response) => {
@@ -119,12 +119,33 @@ export const useDownloadExcelClientes = () => {
   });
 };
 
+export const useDownloadExcelClientesPendientes = () => {
+  let toastID = null;
+  return useMutation({
+    mutationFn: (data) => baseGetBlobFile(`${key}/excel-pendientes`, data),
+    onMutate: () => {
+      toastID = toast.loading("Generando Excel...");
+    },
+    onSuccess: (response) => {
+      if (response) {
+        downloadExcel(response, "clientes_pendientes");
+        toastID &&
+          toast.success("Se generó el Excel correctamente!", { id: toastID });
+      }
+    },
+    onError: (error) => {
+      toastID && toast.error("Error al generar Excel", { id: toastID });
+      console.log("ERROR", error);
+    },
+  });
+};
+
 export const useUploadImageCliente = () => {
   let toastID = null;
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => axiosPostFile(`${key}/subir_imagen`, data),
-    onMutate: (mutation) => {
+    onMutate: () => {
       toastID = toast.loading("Subiendo Imagen...");
     },
     onSuccess: (response) => {

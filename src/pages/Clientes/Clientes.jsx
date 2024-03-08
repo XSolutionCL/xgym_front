@@ -1,6 +1,6 @@
 import { Typography, Spin, Form, Modal, Input, Button, Tabs } from "antd";
 import AntTable from "../../components/Tables/AntTable";
-import { useClienteDelete, useDownloadExcelClientes, usePaginateClientes, useSaveCliente, useUploadImageCliente } from "../../hooks/clientes";
+import { useClienteDelete, useDownloadExcelClientes, useDownloadExcelClientesPendientes, usePaginateClientes, useSaveCliente, useUploadImageCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
 import { useEffect, useState } from "react";
@@ -34,6 +34,8 @@ const Clientes = () => {
   const { data: datosEops, isFetching: datosEisLoading } = useGetDatosEops();
 
   const {mutate: downloadExcel} = useDownloadExcelClientes();
+  const {mutate: downloadExcelPendientes} = useDownloadExcelClientesPendientes();
+  
 
   const { mutate: uploadImage, isLoading: isUploading} = useUploadImageCliente();
 
@@ -178,6 +180,16 @@ const Clientes = () => {
                 <div className="flex flex-row items-center justify-center w-full h-full gap-4 text-center">
                 <RiFileExcel2Fill color="green"/>
                   <Text>Exportar</Text>
+                </div>
+              </Button>
+              <Button
+                className="text-black"
+                type="primary" 
+                onClick={() => downloadExcelPendientes()} 
+              >
+                <div className="flex flex-row items-center justify-center w-full h-full gap-4 text-center">
+                <RiFileExcel2Fill color="green"/>
+                  <Text>Pendientes</Text>
                 </div>
               </Button>
             </div>
