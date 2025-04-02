@@ -1,4 +1,4 @@
-import { Typography, Spin, Form, Modal } from "antd";
+import { Typography, Spin, Form } from "antd";
 import AntTable from "../../components/Tables/AntTable";
 import useTableFilters from "../../common/store/tableFiltersStore";
 import BaseModal from "../../components/Modals/BaseModal";
@@ -15,7 +15,7 @@ import { useHasPermission } from "../../utils/permissions";
 const { Title } = Typography;
 
 const Usuarios = () => {
-  const { data, isFetching, isError } = usePaginateUsuarios();
+  const { data, isFetching } = usePaginateUsuarios();
   const { mutate: save, isLoading } = useSaveUsuario();
   const { mutate: remove, isLoading: isRemoving } = useDeleteUsuario();
 
@@ -64,13 +64,14 @@ const Usuarios = () => {
     form.isFieldsTouched() ? save(cuerpo) : null;
 
     setModalIsOpen(false);
-    setEditingClient(null);
+    setEditingUsuario(null);
     form.resetFields();
   };
 
   const onCancel = () => {
     form.resetFields();
     setModalIsOpen(false);
+    setEditingUsuario(null);
   };
 
   if (isFetching || isLoading || isRemoving) {

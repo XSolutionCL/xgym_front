@@ -1,4 +1,4 @@
-import { Typography, Spin, Form, Modal, Input, Button, Tabs } from "antd";
+import { Typography, Spin, Form, Input, Button, Tabs } from "antd";
 import AntTable from "../../components/Tables/AntTable";
 import { useClienteDelete, useDownloadExcelClientes, useDownloadExcelClientesPendientes, usePaginateClientes, useSaveCliente, useUploadImageCliente } from "../../hooks/clientes";
 import useTableFilters from "../../common/store/tableFiltersStore";
@@ -33,11 +33,11 @@ const Clientes = () => {
 
   const { data: datosEops, isFetching: datosEisLoading } = useGetDatosEops();
 
-  const {mutate: downloadExcel} = useDownloadExcelClientes();
-  const {mutate: downloadExcelPendientes} = useDownloadExcelClientesPendientes();
-  
+  const { mutate: downloadExcel } = useDownloadExcelClientes();
+  const { mutate: downloadExcelPendientes } = useDownloadExcelClientesPendientes();
 
-  const { mutate: uploadImage, isLoading: isUploading} = useUploadImageCliente();
+
+  const { mutate: uploadImage, isLoading: isUploading } = useUploadImageCliente();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -48,7 +48,7 @@ const Clientes = () => {
   const [tableFilters, setTableFilters] = useTableFilters((state) => [state.tableFilters, state.setTableFilters]);
 
   useEffect(() => {
-    if (!tableFilters.sorter.field){
+    if (!tableFilters.sorter.field) {
       setTableFilters({
         ...tableFilters,
         sorter: {
@@ -69,7 +69,7 @@ const Clientes = () => {
       })
     }
   }, [])
-  
+
 
   const handleSubmit = (d) => {
     const cuerpo = {
@@ -78,10 +78,10 @@ const Clientes = () => {
       datos_extras: d.datos_extras
         ?.map((d, i) => (d !== null ? { [`${i}`]: d } : {})),
       ...(editingClient ? { cod_cliente: editingClient } : {}),
-    }; 
+    };
 
     form.isFieldsTouched() ? save(cuerpo) : null;
-    
+
     setModalIsOpen(false);
     setEditingClient(null);
     form.resetFields();
@@ -89,16 +89,17 @@ const Clientes = () => {
 
   const onCancel = () => {
     form.resetFields();
-    setModalIsOpen(false);    
+    setModalIsOpen(false);
+    setEditingClient(null);
   };
 
   const onSearch = (value) => {
     if (value && value?.length > 0) {
       setTableFilters({
         ...tableFilters,
-        filters: {search: value},
+        filters: { search: value },
       })
-    }else{
+    } else {
       setTableFilters({
         ...tableFilters,
         filters: {},
@@ -112,17 +113,17 @@ const Clientes = () => {
 
   return (
     <div className="flex flex-col w-full h-full p-4">
-      <ClientePlanesModal isModalOpen={planesIsModalOpen} setIsModalOpen={setPlanesIsModalOpen}/>
-      <ClienteImagenModal 
-        uploadModalIsOpen={uploadModalIsOpen} 
+      <ClientePlanesModal isModalOpen={planesIsModalOpen} setIsModalOpen={setPlanesIsModalOpen} />
+      <ClienteImagenModal
+        uploadModalIsOpen={uploadModalIsOpen}
         setUploadModalIsOpen={setUploadModalIsOpen}
         uploadImage={uploadImage}
-        isUploading={isUploading}  
+        isUploading={isUploading}
       />
       <div className="flex flex-row items-center justify-between w-full">
         <Title level={2}>Lista de Clientes</Title>
         <div className="flex flex-col items-end justify-between w-1/4 gap-4">
-          <Search 
+          <Search
             autoFocus
             value={tableFilters.filters.search}
             placeholder="Nombre, Apellidos o Rut"
@@ -151,21 +152,21 @@ const Clientes = () => {
                   key: "1",
                   label: "Datos Principales",
                   children: <FlexForm
-                              form={form} 
-                              onFinish={handleSubmit} 
-                              fields={makeItems({
-                                sexos: data.sexos || []
-                              })}
-                            />
+                    form={form}
+                    onFinish={handleSubmit}
+                    fields={makeItems({
+                      sexos: data.sexos || []
+                    })}
+                  />
                 },
                 {
                   key: "2",
                   label: "Datos Extras",
                   children: <FlexForm
-                              form={form} 
-                              onFinish={handleSubmit} 
-                              fields={makeItemsDextras({datosEops:datosEops})}
-                            />
+                    form={form}
+                    onFinish={handleSubmit}
+                    fields={makeItemsDextras({ datosEops: datosEops })}
+                  />
                 }
               ]}
             />
@@ -174,21 +175,21 @@ const Clientes = () => {
             <div className="flex flex-row w-full">
               <Button
                 className="text-black"
-                type="primary" 
-                onClick={() => downloadExcel()} 
+                type="primary"
+                onClick={() => downloadExcel()}
               >
                 <div className="flex flex-row items-center justify-center w-full h-full gap-4 text-center">
-                <RiFileExcel2Fill color="green"/>
+                  <RiFileExcel2Fill color="green" />
                   <Text>Exportar</Text>
                 </div>
               </Button>
               <Button
                 className="text-black"
-                type="primary" 
-                onClick={() => downloadExcelPendientes()} 
+                type="primary"
+                onClick={() => downloadExcelPendientes()}
               >
                 <div className="flex flex-row items-center justify-center w-full h-full gap-4 text-center">
-                <RiFileExcel2Fill color="green"/>
+                  <RiFileExcel2Fill color="green" />
                   <Text>Pendientes</Text>
                 </div>
               </Button>
@@ -196,22 +197,22 @@ const Clientes = () => {
           }
         />
       </div>
-      <AntTable 
+      <AntTable
         columns={makeColumns({
           form: form,
           setPlanesIsModalOpen: setPlanesIsModalOpen,
           remove: remove,
-          setEditingClient: setEditingClient, 
+          setEditingClient: setEditingClient,
           setModalIsOpen: setModalIsOpen,
           hasPermission: hasPermission,
           setUploadModalIsOpen: setUploadModalIsOpen
-        })} 
-        data={data.list} 
+        })}
+        data={data.list}
       />
     </div>
   )
-    
-  
+
+
 }
 
 export default Clientes;

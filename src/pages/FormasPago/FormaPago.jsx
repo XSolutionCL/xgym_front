@@ -18,7 +18,7 @@ const FormaPago = () => {
 
   const [editingFormaPago, setEditingFormaPago] = useState(null)
 
-  const { data, isFetching, isError } = usePaginateFormasPago();
+  const { data, isFetching } = usePaginateFormasPago();
   const { mutate: save, isLoading } = useSaveFormasPago();
   const { mutate: remove, isLoading: isRemoving } = useDeleteFormasPago();
 
@@ -64,7 +64,8 @@ const FormaPago = () => {
 
   const onCancel = () => {
     form.resetFields();
-    setModalIsOpen(false);    
+    setModalIsOpen(false);  
+    setEditingFormaPago(null);
   };
 
   if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {

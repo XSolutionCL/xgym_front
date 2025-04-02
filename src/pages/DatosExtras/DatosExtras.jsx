@@ -17,7 +17,7 @@ const DatosExtras = () => {
 
   const [editingDatosExtra, setEditingDatosExtra] = useState(null)
 
-  const { data, isFetching, isError } = usePaginateDatosExtras();
+  const { data, isFetching } = usePaginateDatosExtras();
   const { mutate: save, isLoading } = useSaveDatosExtras();
   const { mutate: remove, isLoading: isRemoving } = useDeleteDatosExtras();
 
@@ -63,7 +63,8 @@ const DatosExtras = () => {
 
   const onCancel = () => {
     form.resetFields();
-    setModalIsOpen(false);    
+    setModalIsOpen(false); 
+    setEditingDatosExtra(null);
   };
   
   if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {

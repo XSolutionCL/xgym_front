@@ -64,7 +64,8 @@ const Planes = () => {
 
   const onCancel = () => {
     form.resetFields();
-    setModalIsOpen(false);    
+    setModalIsOpen(false);   
+    setEditingPlan(null);
   };
 
 

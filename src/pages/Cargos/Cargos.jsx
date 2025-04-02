@@ -17,7 +17,7 @@ const Cargos = () => {
 
   const [editingCargo, setEditingCargo] = useState(null)
 
-  const { data, isFetching, isError } = usePaginateCargos();
+  const { data, isFetching } = usePaginateCargos();
   const { mutate: save, isLoading } = useSaveCargo();
   const { mutate: remove, isLoading: isRemoving } = useDeleteCargo();
 
@@ -63,7 +63,8 @@ const Cargos = () => {
 
   const onCancel = () => {
     form.resetFields();
-    setModalIsOpen(false);    
+    setModalIsOpen(false); 
+    setEditingCargo(null);
   };
 
   if (isFetching || !tableFilters.sorter.field || isLoading || isRemoving) {
